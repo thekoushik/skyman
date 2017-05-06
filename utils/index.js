@@ -1,0 +1,1 @@
+module.exports.userDTOProps='_id name email username dateCreated enabled';
