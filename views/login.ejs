@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,16 +8,12 @@
     <meta name="author" content="">
     <title>RememberIt</title>
     <link rel="shortcut icon" href="static/img/favicon.ico">
-    <!-- Bootstrap Core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Theme CSS -->
     <link href="static/css/join.css" rel="stylesheet">
-    <!-- Custom Fonts -->
     <link href="static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!--<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">-->
 </head>
-
 <body>
     <div class="container">
         <div id="fullscreen_bg" class="fullscreen_bg" >
@@ -30,10 +25,10 @@
                             <div class="panel-body">
                                 <form method="post" action="login">
                                     <h3 class="text-center"> SIGN IN</h3>
-                                    <% if(loginerror){ %>
+                                    <% if(loginerrormsg.length){ %>
                                     <div class="alert alert-warning alert-dismissible" role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <strong>Wrong</strong> credentials!
+                                        <strong><%= loginerrormsg %></strong>.
                                     </div>
                                     <% } %>
                                     <div class="form-group">
@@ -65,5 +60,4 @@
         </div>
     </div>
 </body>
-
 </html>

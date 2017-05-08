@@ -7,15 +7,18 @@ app.get('/',function(req,res){
         res.render('index');
 });
 app.get('/login',function(req,res){
-    res.render('login',{loginerror:(req.query.error!=undefined)});
+    if(req.isAuthenticated())
+        res.redirect('/');
+    else
+        res.render('login',{loginerror:(req.query.error!=undefined),loginerrormsg:req.flash('loginerrormsg')});
 });
 app.get('/join',function(req,res){
     res.render('join',{});
 });
-
 app.post('/login',function(req,res,next){
     app.securityManager.authenticateLogin(req,res,next,function(err,user,info){
         if (err) return next(err);
+        req.flash('loginerrormsg', (info)?info.message:"");
         if (!user) return res.redirect('/login?error');
         // Manually establish the session...
         req.login(user, function(err) {

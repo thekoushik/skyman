@@ -1,5 +1,5 @@
 var app = require('../index');
-
+//setup
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
@@ -17,6 +17,8 @@ app.use(expressSession({
     saveUninitialized: true 
 }));
 
+app.use(require('connect-flash')());
+//end setup
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -30,10 +32,22 @@ passport.use(new passportLocal.Strategy(function(username,password,doneCallback)
     doneCallback(null,null)//bad or username missing
     doneCallback(new Error("Internal Error!"))//internal error
     */
-    User.find({username: username,password:password,enabled:true },utils.userDTOProps,function(err,docs){
+    User.find({username: username,password:password},utils.userDTOPropsFull,function(err,docs){
         if(err) doneCallback(new Error("Internal Error!"));
-        else if(docs.length==0) doneCallback(null,false,{message:'wrong'});
-        else doneCallback(null,docs[0]);
+        else if(docs.length==0) doneCallback(null,false,{message:'Wrong credential'});
+        else{
+            var user=docs[0];
+            if(!user.enabled)
+                doneCallback(null,false,{message:'Account is not activated'});
+            else if(!user.accountNonLocked)
+                doneCallback(null,false,{message:'Account is locked'});
+            else if(!user.accountNonExpired)
+                doneCallback(null,false,{message:'Account has expired'});
+            else if(!user.credentialsNonExpired)
+                doneCallback(null,false,{message:'Your credential has expired'});
+            else
+                doneCallback(null,user);
+        }
     });
     /*if(username === password){
         doneCallback(null,{id:username,name:username});
