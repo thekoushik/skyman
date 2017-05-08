@@ -10,6 +10,9 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var csrf = require('csurf');
+var csrfProtection=module.exports.csrfProtection = csrf({ cookie: true });
+
 app.use(cookieParser());
 app.use(expressSession({
     secret:process.env.SESSION_SECRET || "verysecret",
@@ -65,10 +68,6 @@ passport.deserializeUser(function(id, doneCallback) {
   });
 });
 
-var authenticateLogin=function(req,res,next,cb){
+module.exports.authenticateLogin=function(req,res,next,cb){
     passport.authenticate('local',cb)(req,res,next);
-};
-
-module.exports={
-    authenticateLogin:authenticateLogin
 };

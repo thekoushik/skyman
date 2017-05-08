@@ -6,16 +6,16 @@ app.get('/',function(req,res){
     else
         res.render('index');
 });
-app.get('/login',function(req,res){
+app.get('/login',app.securityManager.csrfProtection,function(req,res){
     if(req.isAuthenticated())
         res.redirect('/');
     else
-        res.render('login',{loginerror:(req.query.error!=undefined),loginerrormsg:req.flash('loginerrormsg')});
+        res.render('login',{csrfToken:req.csrfToken(),loginerror:(req.query.error!=undefined),loginerrormsg:req.flash('loginerrormsg')});
 });
 app.get('/join',function(req,res){
     res.render('join',{});
 });
-app.post('/login',function(req,res,next){
+app.post('/login',app.securityManager.csrfProtection,function(req,res,next){
     app.securityManager.authenticateLogin(req,res,next,function(err,user,info){
         if (err) return next(err);
         req.flash('loginerrormsg', (info)?info.message:"");
@@ -33,6 +33,11 @@ app.get('/logout',function(req,res){
 });
 
 app.use('/api',require('./api'));
+
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  res.status(403).send('Hack Attempt!');
+})
 
 app.get('*', function(req, res){
   res.render('404');
