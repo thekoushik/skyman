@@ -6,7 +6,7 @@ app.set('view engine','ejs');
 
 var securityManager = module.exports.securityManager = require('./security');
 
-require('./controllers');
+require('./routes');
 
 var port=process.env.PORT || 8000;
 app.listen(port,function(){
