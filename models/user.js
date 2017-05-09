@@ -10,7 +10,8 @@ var userSchema = new Schema({
   enabled: { type: Boolean, default: true },
   accountNonLocked: { type: Boolean, default: true },
   accountNonExpired: { type: Boolean, default: true },
-  credentialsNonExpired: { type: Boolean, default: true }
+  credentialsNonExpired: { type: Boolean, default: true },
+  roles: [String]
 });
 
 module.exports=mongoose.model('user',userSchema);

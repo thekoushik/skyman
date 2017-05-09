@@ -5,9 +5,10 @@ var controllers = require('../controllers');
 
 var apiRouter = express.Router();
 apiRouter.get('/users',controllers.api.userList);
-apiRouter.get('/user/:id',controllers.api.user);
-apiRouter.get('/register',controllers.api.userCreate);
+apiRouter.get('/user/:id',middleware.hasRole("admin"),controllers.api.user);
+apiRouter.post('/register',controllers.api.userCreate);
 apiRouter.get('/profile', middleware.shouldLogin, controllers.api.info);
+apiRouter.use(controllers.main.errorHandler);
 
 app.use('/api',apiRouter);
 

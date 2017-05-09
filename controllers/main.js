@@ -12,6 +12,7 @@ module.exports.loginPage=function(req,res){
     else
         res.render('login',{
             csrfToken:req.csrfToken(),
+            nextUrl: ((req.query.next) ? "?next="+req.query.next: ""),
             loginerror:(req.query.error!=undefined),
             loginerrormsg:req.flash('loginerrormsg')
         });
@@ -27,6 +28,7 @@ module.exports.login=function(req,res,next){
         // Manually establish the session...
         req.login(user, function(err) {
             if (err) return next(err);
+            if(req.query.next) return res.redirect(req.query.next);
             return res.redirect('/');
         });
     });
@@ -39,6 +41,7 @@ module.exports.notFound=function(req,res){
     res.render('404',{origin:req.originalUrl});
 };
 module.exports.errorHandler=function (err, req, res, next) {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err);
-  res.status(403).send('Hack Attempt!');
+  if (err.code === 'EBADCSRFTOKEN') res.status(403).send('Hack Attempt!');
+  else if(err.code === 'ENEEDROLE') res.render("403");
+  else return next(err);
 };
