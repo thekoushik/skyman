@@ -24,7 +24,7 @@ module.exports.login=function(req,res,next){
     app.securityManager.authenticateLogin(req,res,next,function(err,user,info){
         if (err) return next(err);
         req.flash('loginerrormsg', (info)?info.message:"");
-        if (!user) return res.redirect('/login?error');
+        if (!user) return res.redirect('/login?error=1'+((req.query.next)?"&next="+req.query.next:""));
         // Manually establish the session...
         req.login(user, function(err) {
             if (err) return next(err);

@@ -4,7 +4,7 @@ const utils = require('../utils');
 module.exports.userList=function(req, res) {
   const size=(typeof req.query.size == "undefined") ? 10 : Number(req.query.size);
   var query={};
-  if(req.query.last) query['_id']={ $gt: utils.id(req.query.last)};
+  if(req.query.last) query['_id']={ $gt: utils.createId(req.query.last)};
   User.find(query, utils.userDTOProps,{limit:size},function(err, docs) {
     if(err) res.status(500).end();
     else res.status(200).json(docs);
@@ -20,11 +20,14 @@ module.exports.userCreate=function(req,res){
   User.find({ username: req.body.username }, 'enabled', function (err, docs) {
     if(err) res.status(500).end();
     else{
-      if(docs.length>0) res.status(400).end("username exists");
+      if(docs.length>0) res.status(422).json({
+        message: "username exists",
+        name: "ValidationError"
+      });
       else{
         User.create(req.body,function(err2,small){
-          if(err2) res.status(500).json(err2);
-          else res.status(200).json(small);
+          if(err2) res.status(422).json(err2);
+          else res.status(201).location("/api/user/"+small._id).end();
         });
       }
     }

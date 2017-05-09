@@ -62,7 +62,7 @@ passport.serializeUser(function(user,doneCallback){
     doneCallback(null, user._id);
 });
 passport.deserializeUser(function(id, doneCallback) {
-  User.findById(id,utils.userDTOProps, function(err, user) {
+  User.findById(id,utils.userDTOPropsFull, function(err, user) {
     if(err) doneCallback(new Error("Internal Error!"));
     else doneCallback(null,user);
   });
