@@ -29,44 +29,48 @@ const routerJson=[
         children:[
             {
                 path:"/users",
-                stack:[ controllers.api.userList ]
+                controller: controllers.api.userList
             },{
                 path:"/users/:id",
-                stack:[ middleware.hasRole("admin"),controllers.api.user ]
+                controller: controllers.api.user,
+                middleware:[ middleware.hasRole("admin") ]
             },{
                 path:"/users",
                 method:"post",
-                stack:[ controllers.api.userCreate ]
+                controller: controllers.api.userCreate
             },{
                 path:"/profile",
-                stack:[ middleware.shouldLogin, controllers.api.info ]
+                controller: controllers.api.info,
+                middleware:[ middleware.shouldLogin ]
             },{
-                use: controllers.main.errorHandler
+                controller: controllers.main.errorHandler
             }
         ]
     },{
         children:[
             {
                 path:"/",
-                stack: [ controllers.main.index ],
+                controller: controllers.main.index
             },{
                 path:"/login",
-                stack: [ app.securityManager.csrfProtection, controllers.main.loginPage ]
+                controller: controllers.main.loginPage,
+                middleware: [ app.securityManager.csrfProtection ]
             },{
                 path:"/login",
                 method:"post",
-                stack: [ app.securityManager.csrfProtection, controllers.main.login ]
+                controller: controllers.main.login,
+                middleware: [ app.securityManager.csrfProtection ]
             },{
                 path: "/join",
-                stack: [ controllers.main.registerPage ]
+                controller: controllers.main.registerPage
             },{
                 path: "/logout",
-                stack: [ controllers.main.logout ]
+                controller: controllers.main.logout
             },{
-                use: controllers.main.errorHandler
+                controller: controllers.main.errorHandler
             },{
                 path: "*",
-                stack: [ controllers.main.notFound ]
+                controller: controllers.main.notFound
             }
         ]
     }

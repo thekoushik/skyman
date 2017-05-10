@@ -11,12 +11,12 @@ function createRouterFromJson(json,router){
                 router = createRouterFromJson(json[i],router);
             return router;
         }
-    }else if(json.use){
-        router.use(json.use);
+    }else if(!json.path && json.controller){
+        router.use(json.controller);
         return router;
     }else{
-        if(json.stack){
-            var stack=json.stack;
+        if(json.controller){
+            var stack=((json.middleware)?json.middleware.concat(json.controller) :[json.controller]);
             if(json.path) stack.unshift(json.path);
             router[(json.method==undefined)?"get":json.method].apply(router,stack);
         }else if(Array.isArray(json.children)){

@@ -27,7 +27,7 @@ module.exports.userCreate=function(req,res){
       else{
         User.create(req.body,function(err2,small){
           if(err2) res.status(422).json(err2);
-          else res.status(201).location("/api/user/"+small._id).end();
+          else res.status(201).location(req.baseUrl+req.path+"/"+small._id).end();
         });
       }
     }
