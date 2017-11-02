@@ -1,4 +1,4 @@
-var app = require('../index');
+var app = require('./index');
 //setup
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -25,8 +25,8 @@ app.use(require('connect-flash')());
 app.use(passport.initialize());
 app.use(passport.session());
 
-var User = require('../models').user;
-const utils = require('../utils');
+var User = require('./models').user;
+const utils = require('./utils');
 
 passport.use(new passportLocal.Strategy(function(username,password,doneCallback){
     //access db and fetch user by username and password
