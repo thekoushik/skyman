@@ -26,7 +26,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 var User = require('./models').user;
-const utils = require('./utils');
+const dto = User.DTOPropsFull;
 
 passport.use(new passportLocal.Strategy(function(username,password,doneCallback){
     //access db and fetch user by username and password
@@ -35,7 +35,7 @@ passport.use(new passportLocal.Strategy(function(username,password,doneCallback)
     doneCallback(null,null)//bad or username missing
     doneCallback(new Error("Internal Error!"))//internal error
     */
-    User.find({username: username,password:password},utils.userDTOPropsFull,function(err,docs){
+    User.find({username: username,password:password},dto,function(err,docs){
         if(err) doneCallback(new Error("Internal Error!"));
         else if(docs.length==0) doneCallback(null,false,{message:'Wrong credential'});
         else{
@@ -62,7 +62,7 @@ passport.serializeUser(function(user,doneCallback){
     doneCallback(null, user._id);
 });
 passport.deserializeUser(function(id, doneCallback) {
-  User.findById(id,utils.userDTOPropsFull, function(err, user) {
+  User.findById(id,dto, function(err, user) {
     if(err) doneCallback(new Error("Internal Error!"));
     else doneCallback(null,user);
   });

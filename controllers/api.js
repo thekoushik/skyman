@@ -1,37 +1,34 @@
-var User = require('../models').user;
-const utils = require('../utils');
+var services=require('../services');
 
 module.exports.userList=function(req, res) {
-  const size=(typeof req.query.size == "undefined") ? 10 : Number(req.query.size);
-  var query={};
-  if(req.query.last) query['_id']={ $gt: utils.createId(req.query.last)};
-  User.find(query, utils.userDTOProps,{limit:size},function(err, docs) {
-    if(err) res.status(500).end();
-    else res.status(200).json(docs);
-  });
+  services.user_service.userList(req.query.size,req.query.last)
+    .then((list)=>{
+      res.json(list)
+    })
+    .catch((err)=>{
+      res.status(500).send(err);
+    })
 };
 module.exports.user=function(req,res){
-  User.findById(req.params.id,utils.userDTOProps,function(err,doc){
-    if(err) res.status(500).end();
-    else res.status(200).json(doc);
-  });
+  services.user_service.getUser(req.params.id)
+    .then((user)=>{
+      res.status(200).json(user)
+    })
+    .catch((err)=>{
+      res.status(500).send(err)
+    })
 };
 module.exports.userCreate=function(req,res){
-  User.find({ username: req.body.username }, 'enabled', function (err, docs) {
-    if(err) res.status(500).end();
-    else{
-      if(docs.length>0) res.status(422).json({
-        message: "username exists",
-        name: "ValidationError"
-      });
-      else{
-        User.create(req.body,function(err2,small){
-          if(err2) res.status(422).json(err2);
-          else res.status(201).location(req.baseUrl+req.path+"/"+small._id).end();
-        });
-      }
-    }
-  });
+  services.user_service.userCreate(req.body)
+    .then((user)=>{
+      res.status(201).location(req.baseUrl+req.path+"/"+user._id).end();
+    })
+    .catch((err)=>{
+      if(typeof err == 'object')
+        res.status(422).json(err);
+      else
+        res.status(500).send(err);
+    })
 };
 module.exports.info=function(req, res) {
   res.status(200).json(req.user);

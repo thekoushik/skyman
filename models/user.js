@@ -15,3 +15,5 @@ var userSchema = new Schema({
 });
 
 module.exports=mongoose.model('user',userSchema);
+module.exports.DTOProps='_id name email username dateCreated';
+module.exports.DTOPropsFull='_id name email username dateCreated enabled accountNonLocked accountNonExpired credentialsNonExpired roles';
