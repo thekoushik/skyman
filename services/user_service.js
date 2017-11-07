@@ -26,6 +26,11 @@ module.exports.getUser=(id)=>{
             .select(User.DTOPropsFull)
             .exec();
 }
+module.exports.getUserByCredentials=(username,password)=>{
+    return User.findOne({username:username,password:password})
+            .select(User.DTOPropsFull)
+            .exec();
+}
 module.exports.userList=(size,last)=>{
     size=(typeof size == undefined) ? 10 : Number(size);
     var query={};

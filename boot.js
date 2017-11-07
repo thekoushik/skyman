@@ -25,49 +25,51 @@ app.use(require('connect-flash')());
 app.use(passport.initialize());
 app.use(passport.session());
 
-var User = require('./models').user;
-const dto = User.DTOPropsFull;
+var mongoose = require('mongoose');
+mongoose.Promise=global.Promise;
+const mongoURI = 'mongodb://127.0.0.1/express-starter';
+mongoose.connect(mongoURI,{ useMongoClient: true});
 
-passport.use(new passportLocal.Strategy(function(username,password,doneCallback){
+var user_service = require('./services').user_service;
+
+passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     //access db and fetch user by username and password
     /*
     doneCallback(null,user)//success
     doneCallback(null,null)//bad or username missing
     doneCallback(new Error("Internal Error!"))//internal error
     */
-    User.find({username: username,password:password},dto,function(err,docs){
-        if(err) doneCallback(new Error("Internal Error!"));
-        else if(docs.length==0) doneCallback(null,false,{message:'Wrong credential'});
-        else{
-            var user=docs[0];
-            if(!user.enabled)
-                doneCallback(null,false,{message:'Account is not activated'});
-            else if(!user.accountNonLocked)
-                doneCallback(null,false,{message:'Account is locked'});
-            else if(!user.accountNonExpired)
-                doneCallback(null,false,{message:'Account has expired'});
-            else if(!user.credentialsNonExpired)
-                doneCallback(null,false,{message:'Your credential has expired'});
-            else
-                doneCallback(null,user);
-        }
+    user_service.getUserByCredentials(username,password)
+    .then((user)=>{
+        if(!user) doneCallback(null,false,{message:'Wrong credential'});
+        if(!user.enabled)
+            doneCallback(null,false,{message:'Account is not activated'});
+        else if(!user.accountNonLocked)
+            doneCallback(null,false,{message:'Account is locked'});
+        else if(!user.accountNonExpired)
+            doneCallback(null,false,{message:'Account has expired'});
+        else if(!user.credentialsNonExpired)
+            doneCallback(null,false,{message:'Your credential has expired'});
+        else
+            doneCallback(null,user);
+    })
+    .catch((err)=>{
+        doneCallback(new Error("Internal Error!"));
     });
-    /*if(username === password){
-        doneCallback(null,{id:username,name:username});
-    }else{
-        doneCallback(null,false,{message:'wrong'});
-    }*/
 }));
-passport.serializeUser(function(user,doneCallback){
+passport.serializeUser((user,doneCallback)=>{
     doneCallback(null, user._id);
 });
-passport.deserializeUser(function(id, doneCallback) {
-  User.findById(id,dto, function(err, user) {
-    if(err) doneCallback(new Error("Internal Error!"));
-    else doneCallback(null,user);
-  });
+passport.deserializeUser((id, doneCallback)=>{
+    user_service.getUser(id)
+    .then((user)=>{
+        doneCallback(null,user);
+    })
+    .catch((err)=>{
+        doneCallback(new Error("Internal Error!"));
+    });
 });
 
-module.exports.authenticateLogin=function(req,res,next,cb){
+module.exports.authenticateLogin=(req,res,next,cb)=>{
     passport.authenticate('local',cb)(req,res,next);
 };
