@@ -41,8 +41,9 @@ passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     */
     user_service.getUserByCredentials(username,password)
     .then((user)=>{
-        if(!user) doneCallback(null,false,{message:'Wrong credential'});
-        if(!user.enabled)
+        if(!user)
+            doneCallback(null,false,{message:'Wrong credential'});
+        else if(!user.enabled)
             doneCallback(null,false,{message:'Account is not activated'});
         else if(!user.accountNonLocked)
             doneCallback(null,false,{message:'Account is locked'});
@@ -54,7 +55,7 @@ passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
             doneCallback(null,user);
     })
     .catch((err)=>{
-        doneCallback(new Error("Internal Error!"));
+        doneCallback(err);
     });
 }));
 passport.serializeUser((user,doneCallback)=>{
