@@ -1,7 +1,7 @@
 var User = require('../models').user;
 
 module.exports.userCreate=(user)=>{
-    return new Promise((res,rej)=>{
+    /*return new Promise((res,rej)=>{
         User.findOne({ username: user.username })
             .select('enabled')
             .exec((err, doc)=>{
@@ -19,11 +19,20 @@ module.exports.userCreate=(user)=>{
                     }
                 }
             });
-    })
+    })*/
+    return User.create(user);
+}
+module.exports.getUserByUsernameAndToken=(username,token)=>{
+    return User.findOne({username: username,'verify_token.token':token}).exec();
 }
 module.exports.getUser=(id)=>{
     return User.findById(id)
             .select(User.DTOPropsFull)
+            .exec();
+}
+module.exports.getUserByEmail=(email)=>{
+    return User.findOne({email})
+            .select('username verify_token')
             .exec();
 }
 module.exports.getUserByCredentials=(username,password)=>{

@@ -57,11 +57,11 @@
                                     <a href="login" class="btn btn-link">Login</a>
                                     <a href="/" class="btn btn-link">Back</a>
 
-                                    <div class="alert alert-danger" v-if="getResultError.length">
-                                        {{ getResultError }}
+                                    <div class="alert alert-danger" v-if="result.error">
+                                        {{ result.error }}
                                     </div>
-                                    <div class="alert alert-success" v-if="getResultSuccess.length">
-                                        {{ getResultSuccess }}
+                                    <div class="alert alert-success" v-if="result.success">
+                                        {{ result.success }}
                                     </div>
                                 </div>
                                 </form>
@@ -83,15 +83,9 @@
                 email: '',
                 username: '',
                 secret:'',
-                resultSuccess: '',
-                resultError: ''
-            },
-            computed:{
-                getResultError:function(){
-                    return this.resultError
-                },
-                getResultSuccess:function(){
-                    return this.resultSuccess
+                result:{
+                    success: '',
+                    error: ''
                 }
             },
             methods: {
@@ -102,6 +96,7 @@
                     }
                 },
                 submitForm:function(){
+                    var self=this;
                     axios({
                         method: 'post',
                         url: '/api/users',
@@ -111,17 +106,17 @@
                             username: this.username,
                             password: this.secret
                         }
-                    }).then((response)=>{
+                    }).then(function(response){
                         if(response.status==201)
-                            this.resultSuccess="Registration Successful";
+                            self.result.success="Registration Successful";
                         else
-                            this.resultError="Whoops, looks like server is not working";
+                            self.result.error="Whoops, looks like server is not working";
                         console.log(response);
-                    }).catch((error)=>{
-                        if(error.response | (error.response.status==422)){
-                            this.resultError=error.response.data.message;
-                        }else
-                            this.resultError="Whoops, looks like server is not working";
+                    }).catch(function(error){
+                        if(error.response.status==422)
+                            self.result.error=error.response.data.message;
+                        else
+                            self.result.error="Whoops, looks like server is not working";
                         console.log(error.response);
                     });
                 }

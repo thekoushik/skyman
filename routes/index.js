@@ -67,6 +67,16 @@ const routerJson=[
                 path: "/logout",
                 controller: controllers.main.logout
             },{
+                path: "/resend_verify",
+                controller: controllers.main.resend_verify_page
+            },{
+                path: "/resend_verify",
+                method:'post',
+                controller: controllers.main.resend_verify
+            },{
+                path: "/verify",
+                controller: controllers.main.verify
+            },{
                 controller: controllers.main.errorHandler
             },{
                 path: "*",

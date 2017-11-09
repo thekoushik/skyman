@@ -45,11 +45,11 @@ passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
             doneCallback(null,false,{message:'Wrong credential'});
         else if(!user.enabled)
             doneCallback(null,false,{message:'Account is not activated'});
-        else if(!user.accountNonLocked)
+        else if(user.account_locked)
             doneCallback(null,false,{message:'Account is locked'});
-        else if(!user.accountNonExpired)
+        else if(user.account_expired)
             doneCallback(null,false,{message:'Account has expired'});
-        else if(!user.credentialsNonExpired)
+        else if(user.credential_expired)
             doneCallback(null,false,{message:'Your credential has expired'});
         else
             doneCallback(null,user);
@@ -74,3 +74,31 @@ passport.deserializeUser((id, doneCallback)=>{
 module.exports.authenticateLogin=(req,res,next,cb)=>{
     passport.authenticate('local',cb)(req,res,next);
 };
+
+let mailTransporter = require('nodemailer').createTransport({
+        service: "gmail",
+        auth: {
+            user: "youremail@gmail.com",
+            pass: "yourpassword"
+        }
+    });
+const noMail=false;//no mail for quick testing
+
+var sendEmail=module.exports.sendEmail=(to,subject,html,from='youremail@gmail.com')=>{
+    if(noMail) return html;
+    return mailTransporter.sendMail({
+        from: from,
+        to: to, 
+        subject: subject,
+        html: html
+    })
+}
+
+module.exports.sendEmailConfirm=(to,url)=>{
+    return new Promise((resolve,reject)=>{
+        require('ejs').renderFile('views/email/confirm.html',{url:url},(err,str)=>{
+            if(err) reject(err);
+            else resolve(sendEmail(to,'Account Verification',str))
+        })
+    })
+}
