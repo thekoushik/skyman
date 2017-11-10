@@ -3,7 +3,8 @@ Starter project for express web app
 
 ## Prerequisites
 
-MongoDB
+Node 6.9.0 or higher
+Mongo 3.2.0 or higher
 
 ## Install
 
