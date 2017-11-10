@@ -1,5 +1,5 @@
 {
-  "name": "my_starter",
+  "name": "express_starter",
   "version": "0.0.1",
   "description": "Starter express passport",
   "main": "index.js",
