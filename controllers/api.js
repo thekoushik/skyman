@@ -1,6 +1,7 @@
 var securityManager=require('../index').securityManager;
 var services=require('../services');
 var util=require('../utils');
+var config = require('../config');
 
 module.exports.userList=function(req, res) {
   services.user_service.userList(req.query.size,req.query.last)
@@ -28,7 +29,7 @@ module.exports.userCreate=function(req,res){
   services.user_service.userCreate(userdata)
     .then((user)=>{
       securityManager
-        .sendEmailConfirm(user.email,'http://localhost:8000/verify?token='+token)
+        .sendEmailConfirm(user.email,config.url+'/verify?token='+token)
         .then((response)=>{
             console.info(response);
         })

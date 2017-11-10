@@ -2,6 +2,7 @@ var securityManager = require('../index').securityManager;
 var util=require('../utils');
 var user_service=require('../services').user_service;
 var user_model=require('../models').user;
+var config = require('../config');
 
 module.exports.index=function(req,res){
     if(req.isAuthenticated())
@@ -49,7 +50,7 @@ module.exports.resend_verify=(req,res)=>{
             if(!user.enabled){
                 const token=util.encodeAuthToken(user.username,user.auth_token.token);
                 securityManager
-                    .sendEmailConfirm(user.email,'http://localhost:8000/verify?token='+token)
+                    .sendEmailConfirm(user.email,config.url+'/verify?token='+token)
                     .then((response)=>{
                         console.info(response);
                     })
@@ -112,7 +113,7 @@ module.exports.forgot=(req,res)=>{
         .then((newuser)=>{
             const token=util.encodeAuthToken(newuser.username,newuser.auth_token.token);
             securityManager
-                .sendEmailForgot(newuser.email,'http://localhost:8000/reset?token='+token)
+                .sendEmailForgot(newuser.email,config.url+'/reset?token='+token)
                 .then((response)=>{
                     console.info(response);
                 })

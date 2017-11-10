@@ -6,5 +6,6 @@ module.exports={
             user: "youremail@gmail.com",
             pass: "yourpassword"
         }
-    }
+    },
+    url: 'http://localhost:8000'
 }
