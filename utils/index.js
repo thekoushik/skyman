@@ -12,10 +12,10 @@ module.exports.createToken=(dayAhead=1)=>{
         expire_at: date
     };
 }
-module.exports.encodeVerifyToken=(user,token)=>{
+module.exports.encodeAuthToken=(user,token)=>{
     return Buffer.from(user+':'+token, 'ascii').toString('base64');
 }
-module.exports.decodeVerifyToken=(token)=>{
+module.exports.decodeAuthToken=(token)=>{
     var data=Buffer.from(token, 'base64').toString('ascii').split(':');
     return {user:data[0],token:data[1]};
 }

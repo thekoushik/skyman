@@ -77,6 +77,20 @@ const routerJson=[
                 path: "/verify",
                 controller: controllers.main.verify
             },{
+                path: "/forgot",
+                controller: controllers.main.forgot_page
+            },{
+                path: "/forgot",
+                method:"post",
+                controller: controllers.main.forgot
+            },{
+                path: "/reset",
+                controller: controllers.main.reset_page
+            },{
+                path: "/reset",
+                method:"post",
+                controller: controllers.main.reset
+            },{
                 controller: controllers.main.errorHandler
             },{
                 path: "*",

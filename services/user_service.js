@@ -22,8 +22,8 @@ module.exports.userCreate=(user)=>{
     })*/
     return User.create(user);
 }
-module.exports.getUserByUsernameAndToken=(username,token)=>{
-    return User.findOne({username: username,'verify_token.token':token}).exec();
+module.exports.getUserByUsernameAndToken=(username,type,token)=>{
+    return User.findOne({username: username,'auth_token.token_type':type,'auth_token.token':token}).exec();
 }
 module.exports.getUser=(id)=>{
     return User.findById(id)
@@ -32,11 +32,11 @@ module.exports.getUser=(id)=>{
 }
 module.exports.getUserByEmail=(email)=>{
     return User.findOne({email})
-            .select('username verify_token')
+            .select(User.DTOPropsAuth)
             .exec();
 }
 module.exports.getUserByCredentials=(username,password)=>{
-    return User.findOne({username:username,password:password})
+    return User.findOne({username,password})
             .select(User.DTOPropsFull)
             .exec();
 }

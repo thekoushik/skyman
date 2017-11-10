@@ -1,6 +1,7 @@
 var securityManager = require('../index').securityManager;
 var util=require('../utils');
 var user_service=require('../services').user_service;
+var user_model=require('../models').user;
 
 module.exports.index=function(req,res){
     if(req.isAuthenticated())
@@ -46,19 +47,19 @@ module.exports.resend_verify=(req,res)=>{
     user_service.getUserByEmail(req.body.email)
         .then((user)=>{
             if(!user.enabled){
-                const token=util.encodeVerifyToken(user.username,user.verify_token.token);
+                const token=util.encodeAuthToken(user.username,user.auth_token.token);
                 securityManager
-                    .sendEmailConfirm('thekoushik.universe@gmail.com','http://localhost:8000/verify?token='+token)
+                    .sendEmailConfirm(user.email,'http://localhost:8000/verify?token='+token)
                     .then((response)=>{
                         console.info(response);
                     })
                     .catch((err)=>{
                         console.error(err);
                     });
+                res.redirect('/login');
             }else{
-                console.log('Already verified');
+                res.render('error/500',{err:'Already verified'});
             }
-            res.redirect('/login');
         })
         .catch((err)=>{
             res.render('error/500',{err:'Wrong email'});
@@ -66,13 +67,13 @@ module.exports.resend_verify=(req,res)=>{
 }
 module.exports.verify=function(req,res){
     if(req.query.token){
-        var {user,token} = util.decodeVerifyToken(req.query.token);
-        user_service.getUserByUsernameAndToken(user,token)
+        var {user,token} = util.decodeAuthToken(req.query.token);
+        user_service.getUserByUsernameAndToken(user,user_model.VERIFY_TOKEN,token)
             .then((_user)=>{
-                if(Date.now()>_user.verify_token.expire_at)
+                if(Date.now()>_user.auth_token.expire_at)
                     res.render('error/500',{err:'Token expired'});
                 else{
-                    _user.verify_token=null;
+                    _user.auth_token.token=null;
                     _user.enabled=true;
                     return _user.save();
                 }
@@ -81,11 +82,89 @@ module.exports.verify=function(req,res){
                 res.redirect('/login');
             })
             .catch((err)=>{
+                console.log(err);
                 res.render('error/500',{err:'Invalid token'});
             })
     }else
         res.render('error/500',{err: 'Missing token'});
 };
+module.exports.forgot_page=(req,res)=>{
+    res.render('auth/forgot');
+}
+module.exports.forgot=(req,res)=>{
+    user_service.getUserByEmail(req.body.email)
+        .then((user)=>{
+            if(user.account_expired)
+                res.render('error/500',{err:'Account has expired'});
+            else if(user.credential_expired)
+                res.render('error/500',{err:'Your credential has expired'});
+            else if(user.account_locked)
+                res.render('error/500',{err:'Account is locked'});
+            else if(!user.enabled)
+                res.render('error/500',{err:'Account is not activated'});
+            else{
+                var newtoken=util.createToken();
+                newtoken.token_type=user_model.PASSWORD_RESET_TOKEN;
+                user.auth_token=newtoken;
+                return user.save();
+            }
+        })
+        .then((newuser)=>{
+            const token=util.encodeAuthToken(newuser.username,newuser.auth_token.token);
+            securityManager
+                .sendEmailForgot(newuser.email,'http://localhost:8000/reset?token='+token)
+                .then((response)=>{
+                    console.info(response);
+                })
+                .catch((err)=>{
+                    console.error(err);
+                });
+            res.redirect('/login');
+        })
+        .catch((err)=>{
+            console.log(err);
+            res.render('error/500',{err:'Wrong email'});
+        })
+}
+module.exports.reset_page=(req,res)=>{
+    if(req.query.token){
+        var {user,token} = util.decodeAuthToken(req.query.token);
+        user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
+            .then((_user)=>{
+                if(Date.now()>_user.auth_token.expire_at)
+                    res.render('error/500',{err:'Token expired'});
+                else{
+                    res.render('auth/reset',{token:req.query.token});
+                }
+            })
+            .catch((err)=>{
+                res.render('error/500',{err:'Invalid token'});
+            })
+    }else
+        res.render('error/500',{err: 'Missing token'});
+}
+module.exports.reset=(req,res)=>{
+    if(req.query.token){
+        var {user,token} = util.decodeAuthToken(req.query.token);
+        user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
+            .then((_user)=>{
+                if(Date.now()>_user.auth_token.expire_at)
+                    res.render('error/500',{err:'Token expired'});
+                else{
+                    _user.auth_token.token=null;
+                    _user.password=req.body.password;
+                    return _user.save();
+                }
+            })
+            .then((newuser)=>{
+                res.redirect('/login');
+            })
+            .catch((err)=>{
+                res.render('error/500',{err:'Invalid token'});
+            })
+    }else
+        res.render('error/500',{err: 'Missing token'});
+}
 module.exports.notFound=function(req,res){
     res.render('error/404',{origin:req.originalUrl});
 };

@@ -25,10 +25,11 @@ app.use(require('connect-flash')());
 app.use(passport.initialize());
 app.use(passport.session());
 
+const config = require('./config');
+
 var mongoose = require('mongoose');
 mongoose.Promise=global.Promise;
-const mongoURI = 'mongodb://127.0.0.1/express-starter';
-mongoose.connect(mongoURI,{ useMongoClient: true});
+mongoose.connect(config.mongoURI,{ useMongoClient: true});
 
 var user_service = require('./services').user_service;
 
@@ -43,14 +44,14 @@ passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     .then((user)=>{
         if(!user)
             doneCallback(null,false,{message:'Wrong credential'});
-        else if(!user.enabled)
-            doneCallback(null,false,{message:'Account is not activated'});
-        else if(user.account_locked)
-            doneCallback(null,false,{message:'Account is locked'});
         else if(user.account_expired)
             doneCallback(null,false,{message:'Account has expired'});
         else if(user.credential_expired)
             doneCallback(null,false,{message:'Your credential has expired'});
+        else if(!user.enabled)
+            doneCallback(null,false,{message:'Account is not activated'});
+        else if(user.account_locked)
+            doneCallback(null,false,{message:'Account is locked'});
         else
             doneCallback(null,user);
     })
@@ -75,16 +76,10 @@ module.exports.authenticateLogin=(req,res,next,cb)=>{
     passport.authenticate('local',cb)(req,res,next);
 };
 
-let mailTransporter = require('nodemailer').createTransport({
-        service: "gmail",
-        auth: {
-            user: "youremail@gmail.com",
-            pass: "yourpassword"
-        }
-    });
+let mailTransporter = require('nodemailer').createTransport(config.email);
 const noMail=false;//no mail for quick testing
 
-var sendEmail=module.exports.sendEmail=(to,subject,html,from='youremail@gmail.com')=>{
+var sendEmail=module.exports.sendEmail=(to,subject,html,from=config.email.auth.user)=>{
     if(noMail) return html;
     return mailTransporter.sendMail({
         from: from,
@@ -93,12 +88,19 @@ var sendEmail=module.exports.sendEmail=(to,subject,html,from='youremail@gmail.co
         html: html
     })
 }
-
 module.exports.sendEmailConfirm=(to,url)=>{
     return new Promise((resolve,reject)=>{
         require('ejs').renderFile('views/email/confirm.html',{url:url},(err,str)=>{
             if(err) reject(err);
             else resolve(sendEmail(to,'Account Verification',str))
+        })
+    })
+}
+module.exports.sendEmailForgot=(to,url)=>{
+    return new Promise((resolve,reject)=>{
+        require('ejs').renderFile('views/email/forgot.html',{url:url},(err,str)=>{
+            if(err) reject(err);
+            else resolve(sendEmail(to,'Reset Password',str))
         })
     })
 }

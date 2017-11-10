@@ -23,7 +23,9 @@ npm start
 
 ## Help
 
-Database connection is in ***boot.js***
+### Config
+
+Change ***config.js*** for database connection and email credentials
 
 ### Directory Structure
 
