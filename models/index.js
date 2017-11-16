@@ -1,1 +1,1 @@
-module.exports.user=require('./user');
+exports.user=require('./user');

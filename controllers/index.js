@@ -1,7 +1,7 @@
-module.exports.auth=require('./auth');
-module.exports.main=require('./main');
-module.exports.admin=require('./admin');
-module.exports.api=require('./api');
+exports.auth=require('./auth');
+exports.main=require('./main');
+exports.admin=require('./admin');
+exports.api=require('./api');
 /*
 
 status codes:

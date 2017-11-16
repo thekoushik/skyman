@@ -34,4 +34,4 @@ function createRouterFromJson(json,router){
     }
 }
 
-module.exports.createRouterFromJson=createRouterFromJson;
+exports.createRouterFromJson=createRouterFromJson;

@@ -1,12 +1,12 @@
 var createError=require('http-errors');
 
-module.exports.shouldLogin=(req,res,next)=>{
+exports.shouldLogin=(req,res,next)=>{
     if(req.isAuthenticated()){
         res.locals.user = req.user;
         next();
     }else res.redirect('/login?next='+req.originalUrl);// res.status(403).end();
 };
-module.exports.hasRole=(roles)=>{
+exports.hasRole=(roles)=>{
     return (req,res,next)=>{
         if(!req.isAuthenticated())
             res.redirect('/login?next='+req.originalUrl);//res.status(403).end();// next(new Error("You are not allowed to access this page"));

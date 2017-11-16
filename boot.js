@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var csrf = require('csurf');
-var csrfProtection=module.exports.csrfProtection = csrf({ cookie: true });
+var csrfProtection=exports.csrfProtection = csrf({ cookie: true });
 
 app.use(cookieParser());
 app.use(expressSession({
@@ -29,7 +29,9 @@ const config = require('./config');
 
 var mongoose = require('mongoose');
 mongoose.Promise=global.Promise;
-mongoose.connect(config.mongoURI,{ useMongoClient: true});
+mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
+    require('./seeders').seed();
+})
 
 var user_service = require('./services').user_service;
 
@@ -72,14 +74,14 @@ passport.deserializeUser((id, doneCallback)=>{
     });
 });
 
-module.exports.authenticateLogin=(req,res,next,cb)=>{
+exports.authenticateLogin=(req,res,next,cb)=>{
     passport.authenticate('local',cb)(req,res,next);
 };
 
 let mailTransporter = require('nodemailer').createTransport(config.email);
 const noMail=false;//no mail for quick testing
 
-var sendEmail=module.exports.sendEmail=(to,subject,html,from=config.email.auth.user)=>{
+var sendEmail=exports.sendEmail=(to,subject,html,from=config.email.auth.user)=>{
     if(noMail) return html;
     return mailTransporter.sendMail({
         from: from,
@@ -88,7 +90,7 @@ var sendEmail=module.exports.sendEmail=(to,subject,html,from=config.email.auth.u
         html: html
     })
 }
-module.exports.sendEmailConfirm=(to,url)=>{
+exports.sendEmailConfirm=(to,url)=>{
     return new Promise((resolve,reject)=>{
         require('ejs').renderFile('views/email/confirm.html',{url:url},(err,str)=>{
             if(err) reject(err);
@@ -96,7 +98,7 @@ module.exports.sendEmailConfirm=(to,url)=>{
         })
     })
 }
-module.exports.sendEmailForgot=(to,url)=>{
+exports.sendEmailForgot=(to,url)=>{
     return new Promise((resolve,reject)=>{
         require('ejs').renderFile('views/email/forgot.html',{url:url},(err,str)=>{
             if(err) reject(err);

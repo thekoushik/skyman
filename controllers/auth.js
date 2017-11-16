@@ -4,7 +4,7 @@ var user_service=require('../services').user_service;
 var user_model=require('../models').user;
 var config = require('../config');
 
-module.exports.loginPage=(req,res)=>{
+exports.loginPage=(req,res)=>{
     if(req.isAuthenticated())
         res.redirect('/');
     else
@@ -15,10 +15,10 @@ module.exports.loginPage=(req,res)=>{
             loginerrormsg:req.flash('loginerrormsg')
         });
 };
-module.exports.registerPage=(req,res)=>{
+exports.registerPage=(req,res)=>{
     res.render('auth/join',{});
 };
-module.exports.login=(req,res,next)=>{
+exports.login=(req,res,next)=>{
     securityManager.authenticateLogin(req,res,next,(err,user,info)=>{
         if (err) return next(err);
         req.flash('loginerrormsg', (info)?info.message:"");
@@ -31,14 +31,14 @@ module.exports.login=(req,res,next)=>{
         });
     });
 };
-module.exports.logout=(req,res)=>{
+exports.logout=(req,res)=>{
     req.logout();
     res.redirect('/');
 };
-module.exports.resend_verify_page=(req,res)=>{
+exports.resend_verify_page=(req,res)=>{
     res.render('auth/resend');
 }
-module.exports.resend_verify=(req,res)=>{
+exports.resend_verify=(req,res)=>{
     user_service.getUserByEmail(req.body.email)
         .then((user)=>{
             if(!user.enabled){
@@ -60,7 +60,7 @@ module.exports.resend_verify=(req,res)=>{
             res.render('error/500',{err:'Wrong email'});
         })
 }
-module.exports.verify=function(req,res){
+exports.verify=function(req,res){
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
         user_service.getUserByUsernameAndToken(user,user_model.VERIFY_TOKEN,token)
@@ -83,10 +83,10 @@ module.exports.verify=function(req,res){
     }else
         res.render('error/500',{err: 'Missing token'});
 };
-module.exports.forgot_page=(req,res)=>{
+exports.forgot_page=(req,res)=>{
     res.render('auth/forgot');
 }
-module.exports.forgot=(req,res)=>{
+exports.forgot=(req,res)=>{
     user_service.getUserByEmail(req.body.email)
         .then((user)=>{
             if(user.account_expired)
@@ -121,7 +121,7 @@ module.exports.forgot=(req,res)=>{
             res.render('error/500',{err:'Wrong email'});
         })
 }
-module.exports.reset_page=(req,res)=>{
+exports.reset_page=(req,res)=>{
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
         user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
@@ -138,7 +138,7 @@ module.exports.reset_page=(req,res)=>{
     }else
         res.render('error/500',{err: 'Missing token'});
 }
-module.exports.reset=(req,res)=>{
+exports.reset=(req,res)=>{
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
         user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)

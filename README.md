@@ -35,6 +35,7 @@ Change ***config.js*** for database connection and email credentials
 |**middlewares**|Routing middlewares|
 |**models**|DB schema definitions|
 |**routes**|Router in json format|
+|**seeders**|Database seeding|
 |**services**|DB operations(used by controllers)|
 |**static**|Static contents like css, js, images for client ui|
 |**system**|Internal functions used to manage application modules|
@@ -47,4 +48,5 @@ Change ***config.js*** for database connection and email credentials
 * Account activation through email
 * Sign In
 * Password reset through email
+* Seperate Admin/User views
 * Basic Dashboard

@@ -3,7 +3,7 @@ var services=require('../services');
 var util=require('../utils');
 var config = require('../config');
 
-module.exports.userList=function(req, res) {
+exports.userList=function(req, res) {
   services.user_service.userList(req.query.size,req.query.last)
     .then((list)=>{
       res.json(list)
@@ -12,7 +12,7 @@ module.exports.userList=function(req, res) {
       res.status(500).send(err);
     })
 };
-module.exports.user=function(req,res){
+exports.user=function(req,res){
   services.user_service.getUser(req.params.id)
     .then((user)=>{
       res.status(200).json(user)
@@ -21,7 +21,7 @@ module.exports.user=function(req,res){
       res.status(500).send(err)
     })
 };
-module.exports.userCreate=function(req,res){
+exports.userCreate=function(req,res){
   var userdata=req.body;
   var verifyToken=util.createToken();
   userdata.auth_token=verifyToken;
@@ -49,6 +49,6 @@ module.exports.userCreate=function(req,res){
         res.status(500).send(err);
     })
 };
-module.exports.info=function(req, res) {
+exports.info=function(req, res) {
   res.status(200).json(req.user);
 };

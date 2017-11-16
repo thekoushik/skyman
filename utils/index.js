@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 
-module.exports.createId=function(str){
+exports.createId=function(str){
     return new mongoose.Types.ObjectId(str);
 }
-module.exports.createToken=(dayAhead=1)=>{
+exports.createToken=(dayAhead=1)=>{
     var date=new Date();
     date.setDate(date.getDate()+dayAhead);
     return {
@@ -12,10 +12,10 @@ module.exports.createToken=(dayAhead=1)=>{
         expire_at: date
     };
 }
-module.exports.encodeAuthToken=(user,token)=>{
+exports.encodeAuthToken=(user,token)=>{
     return Buffer.from(user+':'+token, 'ascii').toString('base64');
 }
-module.exports.decodeAuthToken=(token)=>{
+exports.decodeAuthToken=(token)=>{
     var data=Buffer.from(token, 'base64').toString('ascii').split(':');
     return {user:data[0],token:data[1]};
 }
