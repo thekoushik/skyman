@@ -25,6 +25,48 @@ app.use(mainRouter);
 */
 const routerJson=[
     {
+        path:"/",
+        controller: controllers.main.index
+    },{
+        path:"/login",
+        controller: controllers.auth.loginPage,
+        middleware: [ app.securityManager.csrfProtection ]
+    },{
+        path:"/login",
+        method:"post",
+        controller: controllers.auth.login,
+        middleware: [ app.securityManager.csrfProtection ]
+    },{
+        path: "/join",
+        controller: controllers.auth.registerPage
+    },{
+        path: "/logout",
+        controller: controllers.auth.logout
+    },{
+        path: "/resend_verify",
+        controller: controllers.auth.resend_verify_page
+    },{
+        path: "/resend_verify",
+        method:'post',
+        controller: controllers.auth.resend_verify
+    },{
+        path: "/verify",
+        controller: controllers.auth.verify
+    },{
+        path: "/forgot",
+        controller: controllers.auth.forgot_page
+    },{
+        path: "/forgot",
+        method:"post",
+        controller: controllers.auth.forgot
+    },{
+        path: "/reset",
+        controller: controllers.auth.reset_page
+    },{
+        path: "/reset",
+        method:"post",
+        controller: controllers.auth.reset
+    },{
         path:"/api",
         children:[
             {
@@ -42,61 +84,39 @@ const routerJson=[
                 path:"/profile",
                 controller: controllers.api.info,
                 middleware:[ middleware.shouldLogin ]
+            }
+        ]
+    },{
+        path: "/admin",
+        middleware: middleware.hasRole("admin"),
+        children:[
+            {
+                path: "/",
+                controller: controllers.admin.dashboard
             },{
                 controller: controllers.main.errorHandler
             }
         ]
     },{
+        middleware: middleware.shouldLogin,
         children:[
             {
-                path:"/",
-                controller: controllers.main.index
+                path: "/dashboard",
+                controller: controllers.main.dashboard
             },{
-                path:"/login",
-                controller: controllers.main.loginPage,
-                middleware: [ app.securityManager.csrfProtection ]
+                path: "/profile",
+                controller: controllers.main.profile
             },{
-                path:"/login",
-                method:"post",
-                controller: controllers.main.login,
-                middleware: [ app.securityManager.csrfProtection ]
-            },{
-                path: "/join",
-                controller: controllers.main.registerPage
-            },{
-                path: "/logout",
-                controller: controllers.main.logout
-            },{
-                path: "/resend_verify",
-                controller: controllers.main.resend_verify_page
-            },{
-                path: "/resend_verify",
-                method:'post',
-                controller: controllers.main.resend_verify
-            },{
-                path: "/verify",
-                controller: controllers.main.verify
-            },{
-                path: "/forgot",
-                controller: controllers.main.forgot_page
-            },{
-                path: "/forgot",
-                method:"post",
-                controller: controllers.main.forgot
-            },{
-                path: "/reset",
-                controller: controllers.main.reset_page
-            },{
-                path: "/reset",
-                method:"post",
-                controller: controllers.main.reset
-            },{
-                controller: controllers.main.errorHandler
-            },{
-                path: "*",
-                controller: controllers.main.notFound
+                path: "/profile",
+                method: "post",
+                controller: controllers.main.save_profile
             }
         ]
+    },{
+        controller: controllers.main.errorHandler
+    },{
+        path: "*",
+        controller: controllers.main.notFound
     }
 ];
 module.exports.router=require('../system').createRouterFromJson(routerJson);

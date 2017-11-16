@@ -1,6 +1,7 @@
+module.exports.auth=require('./auth');
 module.exports.main=require('./main');
+module.exports.admin=require('./admin');
 module.exports.api=require('./api');
-
 /*
 
 status codes:

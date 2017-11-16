@@ -49,3 +49,8 @@ module.exports.userList=(size,last)=>{
         .limit(size)
         .exec();
 }
+module.exports.updateUser=(id,data)=>{
+    return User.findByIdAndUpdate(id,data)
+            .select(User.DTOPropsFull)
+            .exec();
+}

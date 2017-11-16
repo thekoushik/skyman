@@ -17,12 +17,18 @@ function createRouterFromJson(json,router){
     }else{
         if(json.controller){
             var stack=((json.middleware)?json.middleware.concat(json.controller) :[json.controller]);
-            if(json.path) stack.unshift(json.path);
+            if(json.path)
+                stack.unshift(json.path);
             router[(json.method==undefined)?"get":json.method].apply(router,stack);
         }else if(Array.isArray(json.children)){
-            var routerSub = createRouterFromJson(json.children,express.Router());
-            if(json.path) router.use(json.path,routerSub);
-            else router.use(routerSub);
+            var newRouter=express.Router();
+            if(json.middleware)
+                newRouter.use(json.middleware);
+            var routerSub = createRouterFromJson(json.children,newRouter);
+            if(json.path)
+                router.use(json.path,routerSub);
+            else
+                router.use(routerSub);
         }
         return router;
     }
