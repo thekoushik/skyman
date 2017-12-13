@@ -92,7 +92,7 @@ var sendEmail=exports.sendEmail=(to,subject,html,from=config.email.auth.user)=>{
 }
 exports.sendEmailConfirm=(to,url)=>{
     return new Promise((resolve,reject)=>{
-        require('ejs').renderFile('views/email/confirm.html',{url:url},(err,str)=>{
+        require('nunjucks').render('email/confirm.html',{url:url},(err,str)=>{
             if(err) reject(err);
             else resolve(sendEmail(to,'Account Verification',str))
         })
@@ -100,7 +100,7 @@ exports.sendEmailConfirm=(to,url)=>{
 }
 exports.sendEmailForgot=(to,url)=>{
     return new Promise((resolve,reject)=>{
-        require('ejs').renderFile('views/email/forgot.html',{url:url},(err,str)=>{
+        require('nunjucks').render('email/forgot.html',{url:url},(err,str)=>{
             if(err) reject(err);
             else resolve(sendEmail(to,'Reset Password',str))
         })

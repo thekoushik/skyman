@@ -2,8 +2,11 @@ var express = require('express');
 var app = module.exports = express();
 
 app.use('/static',express.static('static'));
-app.set('view engine','html');
-app.engine('html',require('ejs').renderFile);
+
+require('nunjucks').configure('views', {
+    autoescape: true,
+    express: app
+});
 
 var securityManager = module.exports.securityManager = require('./boot');
 

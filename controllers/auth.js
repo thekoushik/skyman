@@ -8,7 +8,7 @@ exports.loginPage=(req,res)=>{
     if(req.isAuthenticated())
         res.redirect('/');
     else
-        res.render('auth/login',{
+        res.render('auth/login.html',{
             csrfToken:req.csrfToken(),
             nextUrl: ((req.query.next) ? "?next="+req.query.next: ""),
             loginerror:(req.query.error!=undefined),
@@ -16,7 +16,7 @@ exports.loginPage=(req,res)=>{
         });
 };
 exports.registerPage=(req,res)=>{
-    res.render('auth/join',{});
+    res.render('auth/join.html',{});
 };
 exports.login=(req,res,next)=>{
     securityManager.authenticateLogin(req,res,next,(err,user,info)=>{
@@ -36,7 +36,7 @@ exports.logout=(req,res)=>{
     res.redirect('/');
 };
 exports.resend_verify_page=(req,res)=>{
-    res.render('auth/resend');
+    res.render('auth/resend.html');
 }
 exports.resend_verify=(req,res)=>{
     user_service.getUserByEmail(req.body.email)
@@ -53,11 +53,11 @@ exports.resend_verify=(req,res)=>{
                     });
                 res.redirect('/login');
             }else{
-                res.render('error/500',{err:'Already verified'});
+                res.render('error/500.html',{err:'Already verified'});
             }
         })
         .catch((err)=>{
-            res.render('error/500',{err:'Wrong email'});
+            res.render('error/500.html',{err:'Wrong email'});
         })
 }
 exports.verify=function(req,res){
@@ -66,7 +66,7 @@ exports.verify=function(req,res){
         user_service.getUserByUsernameAndToken(user,user_model.VERIFY_TOKEN,token)
             .then((_user)=>{
                 if(Date.now()>_user.auth_token.expire_at)
-                    res.render('error/500',{err:'Token expired'});
+                    res.render('error/500.html',{err:'Token expired'});
                 else{
                     _user.auth_token.token=null;
                     _user.enabled=true;
@@ -78,25 +78,25 @@ exports.verify=function(req,res){
             })
             .catch((err)=>{
                 console.log(err);
-                res.render('error/500',{err:'Invalid token'});
+                res.render('error/500.html',{err:'Invalid token'});
             })
     }else
-        res.render('error/500',{err: 'Missing token'});
+        res.render('error/500.html',{err: 'Missing token'});
 };
 exports.forgot_page=(req,res)=>{
-    res.render('auth/forgot');
+    res.render('auth/forgot.html');
 }
 exports.forgot=(req,res)=>{
     user_service.getUserByEmail(req.body.email)
         .then((user)=>{
             if(user.account_expired)
-                res.render('error/500',{err:'Account has expired'});
+                res.render('error/500.html',{err:'Account has expired'});
             else if(user.credential_expired)
-                res.render('error/500',{err:'Your credential has expired'});
+                res.render('error/500.html',{err:'Your credential has expired'});
             else if(user.account_locked)
-                res.render('error/500',{err:'Account is locked'});
+                res.render('error/500.html',{err:'Account is locked'});
             else if(!user.enabled)
-                res.render('error/500',{err:'Account is not activated'});
+                res.render('error/500.html',{err:'Account is not activated'});
             else{
                 var newtoken=util.createToken();
                 newtoken.token_type=user_model.PASSWORD_RESET_TOKEN;
@@ -118,7 +118,7 @@ exports.forgot=(req,res)=>{
         })
         .catch((err)=>{
             console.log(err);
-            res.render('error/500',{err:'Wrong email'});
+            res.render('error/500.html',{err:'Wrong email'});
         })
 }
 exports.reset_page=(req,res)=>{
@@ -127,16 +127,16 @@ exports.reset_page=(req,res)=>{
         user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
             .then((_user)=>{
                 if(Date.now()>_user.auth_token.expire_at)
-                    res.render('error/500',{err:'Token expired'});
+                    res.render('error/500.html',{err:'Token expired'});
                 else{
-                    res.render('auth/reset',{token:req.query.token});
+                    res.render('auth/reset.html',{token:req.query.token});
                 }
             })
             .catch((err)=>{
-                res.render('error/500',{err:'Invalid token'});
+                res.render('error/500.html',{err:'Invalid token'});
             })
     }else
-        res.render('error/500',{err: 'Missing token'});
+        res.render('error/500.html',{err: 'Missing token'});
 }
 exports.reset=(req,res)=>{
     if(req.query.token){
@@ -144,7 +144,7 @@ exports.reset=(req,res)=>{
         user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
             .then((_user)=>{
                 if(Date.now()>_user.auth_token.expire_at)
-                    res.render('error/500',{err:'Token expired'});
+                    res.render('error/500.html',{err:'Token expired'});
                 else{
                     _user.auth_token.token=null;
                     _user.password=req.body.password;
@@ -155,8 +155,8 @@ exports.reset=(req,res)=>{
                 res.redirect('/login');
             })
             .catch((err)=>{
-                res.render('error/500',{err:'Invalid token'});
+                res.render('error/500.html',{err:'Invalid token'});
             })
     }else
-        res.render('error/500',{err: 'Missing token'});
+        res.render('error/500.html',{err: 'Missing token'});
 }

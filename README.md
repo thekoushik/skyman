@@ -40,7 +40,7 @@ Change ***config.js*** for database connection and email credentials
 |**static**|Static contents like css, js, images for client ui|
 |**system**|Internal functions used to manage application modules|
 |**utils**|Common utility functions used throughout the application|
-|**views**|Html files|
+|**views**|Html files (with [nunjucks](https://mozilla.github.io/nunjucks))|
 
 ## Features
 

@@ -11,5 +11,7 @@ module.exports=()=>{
                 enabled:true,
                 roles:['admin']
             })
+    }).catch((e)=>{
+        console.log("No seeding needed.");
     })
 }

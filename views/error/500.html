@@ -36,7 +36,7 @@
           </div>
           <div class="inner cover">
             <h1 class="cover-heading">INTERNAL SERVER ERROR</h1>
-            <p class="lead"><%= err || 'Looks like something is wrong, please try again later.' %></p>
+            <p class="lead">{% if err %} {{err}} {% else %} Looks like something is wrong, please try again later. {%endif%}</p>
           </div>
           <div class="mastfoot">
             <div class="inner">
