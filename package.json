@@ -8,6 +8,10 @@
   },
   "keywords": [],
   "author": "Koushik Seal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thekoushik/express-starter.git"
+  },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",

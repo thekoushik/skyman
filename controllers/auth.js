@@ -11,8 +11,7 @@ exports.loginPage=(req,res)=>{
         res.render('auth/login.html',{
             csrfToken:req.csrfToken(),
             nextUrl: ((req.query.next) ? "?next="+req.query.next: ""),
-            loginerror:(req.query.error!=undefined),
-            loginerrormsg:req.flash('loginerrormsg')
+            loginerror:(req.query.error!=undefined)
         });
 };
 exports.registerPage=(req,res)=>{
@@ -21,8 +20,12 @@ exports.registerPage=(req,res)=>{
 exports.login=(req,res,next)=>{
     securityManager.authenticateLogin(req,res,next,(err,user,info)=>{
         if (err) return next(err);
-        req.flash('loginerrormsg', (info)?info.message:"");
-        if (!user) return res.redirect('/login?error=1'+((req.query.next)?"&next="+req.query.next:""));
+        if (!user){
+            if(info.message)
+                req.flash('warning', info.message);
+            return res.redirect('/login?error=1'+((req.query.next)?"&next="+req.query.next:""));
+        }else
+            req.flash('info', "Welcome "+user.name);
         // Manually establish the session...
         req.login(user, (err)=>{
             if (err) return next(err);

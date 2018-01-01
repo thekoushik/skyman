@@ -23,6 +23,7 @@ exports.profile=(req,res)=>{
 exports.save_profile=(req,res,next)=>{
     user_service.updateUser(req.user._id,{name: req.body.name})
         .then((user)=>{
+            req.flash('success','Profile updated.');
             req.login(user, (err)=>{
                 if (err) return next(err);
                 return res.redirect('/profile');

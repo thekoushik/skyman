@@ -25,6 +25,14 @@ app.use(require('connect-flash')());
 app.use(passport.initialize());
 app.use(passport.session());
 
+const view=require('./utils').view;
+//custom middleware
+app.use(function(req,res,next){
+    res.locals.request=req;//provide access to request object from response
+    res.locals.view=view;//utility functions for view
+    next();
+})
+
 const config = require('./config');
 
 var mongoose = require('mongoose');

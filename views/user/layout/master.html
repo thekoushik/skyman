@@ -1,0 +1,59 @@
+{% set flashes = request.flash() %}
+{% set alert_array=view.alertToArray(flashes)  %}
+{% macro alerts() %}
+{% for item in alert_array %}
+<div class="alert {{item.type}} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {{item.message}}
+</div>
+{% endfor %}
+{% endmacro %}
+{% macro activeIf(uri,text='active') %}
+{% if request.originalUrl.startsWith(uri) %}{{text}}{% endif %}
+{% endmacro %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/static/img/favicon.ico">
+    <title>{% block title %}Express Starter{% endblock %}</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/dashboard.css" rel="stylesheet">
+    {% block css %}
+    {% endblock %}
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      {% include "user/layout/header.html" %}
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            {% include "user/layout/sidebar.html" %}
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            {% block content_header %}
+            <h1 class="page-header">User Dashboard</h1>
+            {% endblock %}
+            <div class="row">
+                <div class="col-md-12">
+                    {{alerts()}}
+                </div>
+            </div>
+            {% block content %}
+            Demo content
+            {% endblock %}
+        </div>
+      </div>
+    </div>
+    <!-- script tags start -->
+    {% block js %}
+    {% endblock %}
+    <!-- script tags end -->
+  </body>
+</html>

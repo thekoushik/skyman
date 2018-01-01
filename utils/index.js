@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+exports.view=require('./view');
 
-exports.createId=function(str){
+exports.createId=(str)=>{
     return new mongoose.Types.ObjectId(str);
 }
 exports.createToken=(dayAhead=1)=>{
