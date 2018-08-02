@@ -4,7 +4,8 @@
   "description": "Starter express passport",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index"
+    "start": "nodemon index",
+    "test": "node_modules/.bin/mocha"
   },
   "keywords": [],
   "author": "Koushik Seal",
@@ -28,5 +29,9 @@
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
   }
 }
