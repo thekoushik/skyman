@@ -40,6 +40,9 @@ exports.getUserByCredentials=(username,password)=>{
             .select(User.DTOPropsFull)
             .exec();
 }
+exports.getAllUsers=()=>{
+    return User.find({ roles: {"$nin":['admin']}}).exec();
+}
 exports.userList=(size,last)=>{
     size=(typeof size == undefined) ? 10 : Number(size);
     var query={};

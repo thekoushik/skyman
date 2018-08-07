@@ -1,3 +1,10 @@
+var user_service=require('../services').user_service;
+
 module.exports.dashboard=(req,res)=>{
-    res.render('admin/dashboard.html');
+    user_service.getAllUsers().then((list)=>{
+        res.render('admin/dashboard.html',{users:list});
+    })
+    .catch((e)=>{
+        res.render('error/500.html');
+    })
 }

@@ -17,6 +17,7 @@
     <link href="static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!--<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">-->
+    <style>[v-cloak]{display: none;}</style>
 </head>
 
 <body>
@@ -28,7 +29,7 @@
                     <div class="row">
                         <div class="col-md-4 col-md-offset-4">
                             <div class="panel panel-default">
-                                <div class="panel-body" id="app">
+                                <div class="panel-body" id="app" v-cloak>
                                     <h3 class="text-center">SIGN UP</h3>
                                     <form class="form form-signup" role="form" @submit.prevent="validateBeforeSubmit">
                                     <div class="form-group" :class="{'has-error': errors.has('name') }">
@@ -46,10 +47,15 @@
                                         <input name="username" v-model="username" v-validate="'required|min:5'" class="form-control" type="text" placeholder="Username">
                                         <p class="text-danger" v-if="errors.has('username')">{{ errors.first('username') }}</p>
                                     </div>
-                                    <div class="form-group" :class="{'has-error': errors.has('secret') }">
-                                        <label class="control-label" for="secret">Secret</label>
-                                        <input name="secret" v-model="secret" v-validate="'required|min:4'" class="form-control" type="text" placeholder="Code Phrase">
-                                        <p class="text-danger" v-if="errors.has('secret')">{{ errors.first('secret') }}</p>
+                                    <div class="form-group" :class="{'has-error': errors.has('password') }">
+                                        <label class="control-label" for="password">Password</label>
+                                        <input name="password" v-model="password" v-validate="'required|min:4'" class="form-control" type="password" placeholder="Password">
+                                        <p class="text-danger" v-if="errors.has('password')">{{ errors.first('password') }}</p>
+                                    </div>
+                                    <div class="form-group" :class="{'has-error': errors.has('confirm') }">
+                                        <label class="control-label" for="confirm">Confirm Password</label>
+                                        <input name="confirm" data-vv-as="password" v-validate="'required|confirmed:password'" class="form-control" type="password" placeholder="Confirm Password">
+                                        <p class="text-danger" v-if="errors.has('confirm')">{{ errors.first('confirm') }}</p>
                                     </div>
                                     <button type="submit" class="btn btn-sm btn-primary btn-block" role="button">
                                         SUBMIT
@@ -73,7 +79,7 @@
             {% endraw %}
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.0.3/dist/vee-validate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
     <script>
         Vue.use(VeeValidate);
@@ -83,7 +89,7 @@
                 name: '',
                 email: '',
                 username: '',
-                secret:'',
+                password:'',
                 result:{
                     success: '',
                     error: ''
@@ -105,7 +111,7 @@
                             name: this.name,
                             email: this.email,
                             username: this.username,
-                            password: this.secret
+                            password: this.password
                         }
                     }).then(function(response){
                         if(response.status==201)
