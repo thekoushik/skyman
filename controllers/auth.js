@@ -54,6 +54,7 @@ exports.resend_verify=(req,res)=>{
                     .catch((err)=>{
                         console.error(err);
                     });
+                req.flash('success','Please check your email for email verification link')
                 res.redirect('/login');
             }else{
                 res.render('error/500.html',{err:'Already verified'});
@@ -63,7 +64,7 @@ exports.resend_verify=(req,res)=>{
             res.render('error/500.html',{err:'Wrong email'});
         })
 }
-exports.verify=function(req,res){
+exports.verify=(req,res)=>{
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
         user_service.getUserByUsernameAndToken(user,user_model.VERIFY_TOKEN,token)
@@ -77,6 +78,7 @@ exports.verify=function(req,res){
                 }
             })
             .then((_user)=>{
+                req.flash('success','Verification Successful')
                 res.redirect('/login');
             })
             .catch((err)=>{
@@ -92,15 +94,19 @@ exports.forgot_page=(req,res)=>{
 exports.forgot=(req,res)=>{
     user_service.getUserByEmail(req.body.email)
         .then((user)=>{
-            if(user.account_expired)
-                res.render('error/500.html',{err:'Account has expired'});
-            else if(user.credential_expired)
-                res.render('error/500.html',{err:'Your credential has expired'});
-            else if(user.account_locked)
-                res.render('error/500.html',{err:'Account is locked'});
-            else if(!user.enabled)
-                res.render('error/500.html',{err:'Account is not activated'});
-            else{
+            if(user.account_expired){
+                req.flash('error','Account has expired')
+                res.redirect('/forgot');
+            }else if(user.credential_expired){
+                req.flash('error','Your credential has expired')
+                res.redirect('/forgot');
+            }else if(user.account_locked){
+                req.flash('error','Account is locked')
+                res.redirect('/forgot');
+            }else if(!user.enabled){
+                req.flash('error','Account is not activated')
+                res.redirect('/forgot');
+            }else{
                 var newtoken=util.createToken();
                 newtoken.token_type=user_model.PASSWORD_RESET_TOKEN;
                 user.auth_token=newtoken;
@@ -117,11 +123,13 @@ exports.forgot=(req,res)=>{
                 .catch((err)=>{
                     console.error(err);
                 });
+            req.flash('success','Please check your email for password reset link')
             res.redirect('/login');
         })
         .catch((err)=>{
             console.log(err);
-            res.render('error/500.html',{err:'Wrong email'});
+            req.flash('error','Wrong email')
+            res.redirect('/forgot');
         })
 }
 exports.reset_page=(req,res)=>{
@@ -155,6 +163,7 @@ exports.reset=(req,res)=>{
                 }
             })
             .then((newuser)=>{
+                req.flash('success','Password reset successful')
                 res.redirect('/login');
             })
             .catch((err)=>{

@@ -1,56 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Express Starter</title>
-    <link rel="shortcut icon" href="/static/img/favicon.ico">
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="static/css/join.css" rel="stylesheet">
-    <link href="static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <!--<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">-->
-</head>
-<body>
-    <div class="container">
-        <div id="fullscreen_bg" class="fullscreen_bg" >
-        <div class="form-signin">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <form method="post" action="reset?token={{token}}">
-                                    <h3 class="text-center"> Reset Password</h3>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                            <input name="password" type="password" class="form-control" placeholder="New Password" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                            <input name="re_password" type="password" class="form-control" placeholder="Retype Password" />
-                                        </div>
-                                    </div>
+{% extends 'auth/index.html' %}
 
-                                    <button class="btn btn-lg btn-primary btn-block" type="submit">
-                                        Reset
-                                    </button>
-                                    <a href="/login" class="btn btn-link">Login</a>
-                                    <a href="/" class="btn btn-link">Back</a>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{% block content_header %}
+Reset Password
+{% endblock %}
+
+{% block content %}
+<form method="post" action="reset?token={{token}}">
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input name="password" type="password" class="form-control" placeholder="New Password" />
         </div>
     </div>
-</body>
-</html>
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+            <input name="re_password" type="password" class="form-control" placeholder="Retype Password" />
+        </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">
+        Reset
+    </button>
+    <a href="/login" class="btn btn-link">Login</a>
+    <a href="/" class="btn btn-link">Back</a>
+</form>
+{% endblock %}

@@ -120,9 +120,12 @@
                             self.result.error="Whoops, looks like server is not working";
                         console.log(response);
                     }).catch(function(error){
-                        if(error.response.status==422)
-                            self.result.error=error.response.data.message;
-                        else
+                        if(error.response.status==422){
+                            if(error.response.data.errors)
+                                self.result.error=Object.keys(error.response.data.errors).map(function(m){return error.response.data.errors[m].message}).join('<br>');
+                            else
+                                self.result.error=error.response.data.message;
+                        }else
                             self.result.error="Whoops, looks like server is not working";
                         console.log(error.response);
                     });

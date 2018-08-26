@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 var csrf = require('csurf');
-var csrfProtection=exports.csrfProtection = csrf({ cookie: true });
+exports.csrfProtection = csrf({ cookie: true });
 
 app.use(cookieParser());
 app.use(expressSession({
@@ -37,6 +37,37 @@ const config = require('./config');
 
 var mongoose = require('mongoose');
 mongoose.Promise=global.Promise;
+mongoose.plugin((schema, options)=>{
+    var indexes=schema.indexes();
+    if(indexes.length==0) return;
+    var postHook=(error, _, next)=>{
+        if(error.name=='MongoError' && error.code==11000){
+            var regex=/index: (.+) dup key:/;
+            var matches=regex.exec(error.message);
+            if(matches){
+                matches=matches[1];
+                for(var i=0;i<indexes.length;i++){
+                    for(var field in indexes[i][0])
+                        if(indexes[i][1].unique && matches.indexOf('$'+field)>0){
+                            var e={}
+                            e[field]=new mongoose.Error.ValidatorError({
+                                type: 'unique',
+                                path: field,
+                                message: field+' already exist'
+                            })
+                            var newError = new mongoose.Error.ValidationError();
+                            newError.errors = e;
+                            return next(newError);
+                        }
+                }
+            }
+        }
+        next(error);
+    }
+    schema.post('save', postHook);
+    schema.post('update', postHook);
+    schema.post('findOneAndUpdate', postHook);
+})
 mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
     require('./seeders').seed();
 })
@@ -87,10 +118,10 @@ exports.authenticateLogin=(req,res,next,cb)=>{
 };
 
 let mailTransporter = require('nodemailer').createTransport(config.email);
-const noMail=false;//no mail for quick testing
+const skipMail=false;//if true mail body will be consoled
 
 var sendEmail=exports.sendEmail=(to,subject,html,from=config.email.auth.user)=>{
-    if(noMail) return html;
+    if(skipMail) return html;
     return mailTransporter.sendMail({
         from: from,
         to: to, 

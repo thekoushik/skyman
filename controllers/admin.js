@@ -1,6 +1,6 @@
 var user_service=require('../services').user_service;
 
-module.exports.dashboard=(req,res)=>{
+exports.dashboard=(req,res)=>{
     user_service.getAllUsers().then((list)=>{
         res.render('admin/dashboard.html',{users:list});
     })
