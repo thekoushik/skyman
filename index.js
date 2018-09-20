@@ -8,7 +8,7 @@ require('nunjucks').configure('views', {
     express: app
 });
 
-module.exports.securityManager = require('./boot');
+module.exports.manager = require('./boot');
 
 require('./routes');
 

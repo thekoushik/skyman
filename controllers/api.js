@@ -1,4 +1,4 @@
-var securityManager=require('../index').securityManager;
+var securityManager=require('../index').manager;
 var services=require('../services');
 var util=require('../utils');
 var config = require('../config');

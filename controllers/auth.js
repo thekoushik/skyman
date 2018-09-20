@@ -1,4 +1,4 @@
-var securityManager = require('../index').securityManager;
+var securityManager = require('../index').manager;
 var util=require('../utils');
 var user_service=require('../services').user_service;
 var user_model=require('../models').user;

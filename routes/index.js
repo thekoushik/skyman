@@ -9,12 +9,12 @@ const routerJson=[
     },{
         path:"/login",
         controller: controllers.auth.loginPage,
-        middleware: [ app.securityManager.csrfProtection ]
+        middleware: [ app.manager.csrfProtection ]
     },{
         path:"/login",
         method:"post",
         controller: controllers.auth.login,
-        middleware: [ app.securityManager.csrfProtection ]
+        middleware: [ app.manager.csrfProtection ]
     },{
         path: "/join",
         controller: controllers.auth.registerPage

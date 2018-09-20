@@ -3,6 +3,7 @@ var app = require('./index');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
+var RedisStore = require('connect-redis')(expressSession);//////disable this line for Without Redis
 var passport = require('passport');
 var passportLocal = require('passport-local');
 var helmet = require('helmet');
@@ -14,10 +15,14 @@ var csrf = require('csurf');
 exports.csrfProtection = csrf({ cookie: true });
 
 app.use(cookieParser());
+
+const config = require('./config');
+
 app.use(expressSession({
     secret:process.env.SESSION_SECRET || "verysecret",
     resave: true,
-    saveUninitialized: true 
+    saveUninitialized: true,
+    store: new RedisStore(config.redis)/////////////////////////disable this line for Without Redis
 }));
 
 app.use(require('connect-flash')());
@@ -32,8 +37,6 @@ app.use(function(req,res,next){
     res.locals.view=view;//utility functions for view
     next();
 })
-
-const config = require('./config');
 
 var mongoose = require('mongoose');
 mongoose.Promise=global.Promise;
