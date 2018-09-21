@@ -64,7 +64,7 @@ Change ***config.js*** for database connection and email credentials
 * Sign In
 * Password reset through email
 * Seperate Admin/User views
-* Basic Dashboard
+* Simple Blog
 
 ### UI
 
