@@ -7,6 +7,12 @@ const routerJson=[
         path:"/",
         controller: controllers.main.index
     },{
+        path:"/blog",
+        controller:controllers.main.allArticlePage
+    },{
+        path:"/blog/:id",
+        controller:controllers.main.viewArticlePage
+    },{
         path:"/login",
         controller: controllers.auth.loginPage,
         middleware: [ app.manager.csrfProtection ]
@@ -89,6 +95,34 @@ const routerJson=[
                 path: "/profile",
                 method: "post",
                 controller: controllers.main.save_profile
+            },{
+                path:"/articles",
+                children:[
+                    {
+                        path:"/",
+                        controller:controllers.main.articleListPage
+                    },{
+                        path:"/",
+                        method:"post",
+                        controller:controllers.main.createArticle
+                    },{
+                        path:"/new",
+                        controller:controllers.main.newArticlePage
+                    },{
+                        path:"/:id",
+                        controller:controllers.main.articleEditPage
+                    },{
+                        path:"/:id",
+                        method:"post",
+                        controller:controllers.main.editArticle
+                    },{
+                        path:"/:id/edit",
+                        controller:controllers.main.articleEditPage
+                    },{
+                        path:"/:id/delete",
+                        controller:controllers.main.deleteArticle
+                    }
+                ]
             }
         ]
     },{

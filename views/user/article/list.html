@@ -1,0 +1,58 @@
+{% extends "user/layout/master.html" %}
+
+{% block title %}
+ExpressStarter - All Articles
+{% endblock %}
+
+{% block css %}
+<!-- page specific css -->
+{% endblock %}
+
+{% block content_header %}
+<h1 class="page-header">
+    My Articles
+    <a href="/articles/new" class="btn btn-primary pull-right">Create New</a>
+</h1>
+{% endblock %}
+
+{% block content %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Tags</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in list %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{item.title}}</td>
+            <td>{{item.tag}}</td>
+            <td>
+                {% if item.draft %} <span class="label label-warning">Draft</span>
+                {% else %}<span class="label label-success">Published</span>
+                {% endif %}
+            </td>
+            <td>{{item.created_at.toDateString()}}</td>
+            <td>
+                <a href="/articles/{{item._id}}/edit" class="btn btn-info">Edit</a>
+                <a href="/articles/{{item._id}}/delete" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" style="text-align: center;">No Articles</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

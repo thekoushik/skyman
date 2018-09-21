@@ -10,8 +10,8 @@ var Schema       = mongoose.Schema;
 
 var ${tableName}Schema   = new Schema({
     name: {type: String, required: true},
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+},{
+    timestamps: { createdAt: 'created_at',updatedAt:'updated_at' }
 });
 module.exports = mongoose.model('${tableName}', ${tableName}Schema);`;
     fs.writeFileSync(file,start);

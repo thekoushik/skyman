@@ -23,8 +23,8 @@ var userSchema = new Schema({
   account_expired: { type: Boolean, default: false },
   credential_expired: { type: Boolean, default: false },
   roles: [String],
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
+},{
+  timestamps: { createdAt: 'created_at',updatedAt:'updated_at' }
 });
 
 module.exports=mongoose.model('user',userSchema);
