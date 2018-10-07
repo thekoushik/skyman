@@ -1,15 +1,9 @@
-var app = require('../index');
 var express = require('express');
 
-exports.createRouterFromJson=function createRouterFromJson(json,router){
+function parseJSONRoutes(json,router){
     if(Array.isArray(json)){
-        if(router==undefined){
-            for(var i=0;i<json.length;i++)
-                app.use(createRouterFromJson(json[i],express.Router({mergeParams:true})));
-        }else{
-            for(var i=0;i<json.length;i++)
-                router = createRouterFromJson(json[i],router);
-        }
+        for(var i=0;i<json.length;i++)
+            parseJSONRoutes(json[i],router);
     }else if(!json.path && json.controller){
         router.use(json.controller);
     }else{
@@ -22,12 +16,17 @@ exports.createRouterFromJson=function createRouterFromJson(json,router){
             var newRouter=express.Router({mergeParams:true});
             if(json.middleware)
                 newRouter.use(json.middleware);
-            var routerSub = createRouterFromJson(json.children,newRouter);
+            parseJSONRoutes(json.children,newRouter);
             if(json.path)
-                router.use(json.path,routerSub);
+                router.use(json.path,newRouter);
             else
-                router.use(routerSub);
+                router.use(newRouter);
         }
     }
+}
+
+exports.createRouterFromJson=function(json){
+    var router=express.Router({mergeParams:true});
+    parseJSONRoutes(json,router);
     return router;
 }

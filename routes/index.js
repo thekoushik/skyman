@@ -132,4 +132,4 @@ const routerJson=[
         controller: controllers.main.notFound
     }
 ];
-exports.router=require('../system').createRouterFromJson(routerJson);
+module.exports=require('../system').createRouterFromJson(routerJson);

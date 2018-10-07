@@ -12,6 +12,6 @@ module.exports=()=>{
                 roles:['admin']
             })
     }).catch((e)=>{
-        console.log("No seeding needed.");
+        console.log('Error Seeding Admin',e);
     })
 }

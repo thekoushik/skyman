@@ -10,7 +10,7 @@ require('nunjucks').configure('views', {
 
 module.exports.manager = require('./boot');
 
-require('./routes');
+app.use(require('./routes'));
 
 var port=process.env.PORT || 8000;
 app.listen(port,()=>{

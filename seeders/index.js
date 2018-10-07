@@ -14,6 +14,6 @@ exports.seed=(seeders)=>{
         seedersToSeed=[seeders] //console.log('Seed single seeder')
     Promise.all(seedersToSeed.map(seeder=>allseeders[seeder]()))
         .then((values)=>{
-            console.log("Total seed: "+values.length);
+            console.log("Total seeder: "+values.length);
         })
 }
