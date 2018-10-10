@@ -7,7 +7,7 @@ Starter project for express web app :+1:
 | - | - |-|
 |Nodejs| 6.9.0|[link](https://nodejs.org/en/download/)|
 |Mongodb| 3.2.0|[link](https://www.mongodb.com/download-center)|
-|Redis (optional)| 3.0|[non windows](https://redis.io/download) , [windows](https://github.com/microsoftarchive/redis/releases)|
+|Redis (optional)| 3.0|[linux/mac](https://redis.io/download) , [windows](https://github.com/microsoftarchive/redis/releases)|
 
 **_Note_:** If you do not want to use Redis, open **boot.js** and comment the two lines where **RedisStore** is used
 
@@ -26,9 +26,10 @@ npm install -g nodemon
 ```
 npm start
 ```
+then visit url [localhost:8000](localhost:8000)
 
 ### Production Server
-Using [pm2](http://pm2.keymetrics.io/)
+With [pm2](http://pm2.keymetrics.io/)
 ```
 pm2 start index
 ```
@@ -57,6 +58,17 @@ Change ***config.js*** for database connection and email credentials
 |**views**|Html files (with [nunjucks](https://mozilla.github.io/nunjucks))|
 |**test**|[Mocha](https://mochajs.org/) Testcases|
 
+### Generators
+Generators are defined in **system/generator.js**
+##### View list of generators
+```
+npm run gen
+```
+- ##### Model
+   ```
+   npm run gen model model_name
+   ```
+   will create **model_name.js** in **models** directory with name **ModelName**
 ### Features
 
 * Sign Up (with [vuejs](https://vuejs.org) and [axios](https://github.com/axios/axios))
@@ -64,7 +76,8 @@ Change ***config.js*** for database connection and email credentials
 * Sign In
 * Password reset through email
 * Seperate Admin/User views
-* Simple Blog
+* Simple Blog ([**localhost:8000/blog**](localhost:8000/blog))
+* Article CRUD from user account
 
 ### UI
 
