@@ -1,5 +1,4 @@
-var user_service = require('../services').user_service;
-var article_service=require('../services').article_service;
+var {user_service,article_service} = require('../services');
 var util=require('../utils');
 
 exports.index=(req,res)=>{

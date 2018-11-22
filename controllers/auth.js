@@ -1,6 +1,6 @@
-var securityManager = require('../index').manager;
+var securityManager=require('../index').manager;
 var util=require('../utils');
-var user_service=require('../services').user_service;
+var {user_service,mail_service}=require('../services');
 var user_model=require('../models').user;
 var config = require('../config');
 
@@ -46,14 +46,13 @@ exports.resend_verify=(req,res)=>{
         .then((user)=>{
             if(!user.enabled){
                 const token=util.encodeAuthToken(user.username,user.auth_token.token);
-                securityManager
-                    .sendEmailConfirm(user.email,config.url+'/verify?token='+token)
-                    .then((response)=>{
-                        console.info(response);
-                    })
-                    .catch((err)=>{
-                        console.error(err);
-                    });
+                mail_service.sendEmailConfirm(user.email,config.url+'/verify?token='+token)
+                .then((response)=>{
+                    console.info(response);
+                })
+                .catch((err)=>{
+                    console.error(err);
+                });
                 req.flash('success','Please check your email for email verification link')
                 res.redirect('/login');
             }else{
@@ -115,14 +114,13 @@ exports.forgot=(req,res)=>{
         })
         .then((newuser)=>{
             const token=util.encodeAuthToken(newuser.username,newuser.auth_token.token);
-            securityManager
-                .sendEmailForgot(newuser.email,config.url+'/reset?token='+token)
-                .then((response)=>{
-                    console.info(response);
-                })
-                .catch((err)=>{
-                    console.error(err);
-                });
+            mail_service.sendEmailForgot(newuser.email,config.url+'/reset?token='+token)
+            .then((response)=>{
+                console.info(response);
+            })
+            .catch((err)=>{
+                console.error(err);
+            });
             req.flash('success','Please check your email for password reset link')
             res.redirect('/login');
         })

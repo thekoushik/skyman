@@ -8,14 +8,25 @@ function parseJSONRoutes(json,router){
         router.use(json.controller);
     }else{
         if(json.controller){
-            var stack=((json.middleware)?json.middleware.concat(json.controller) :[json.controller]);
-            if(json.path)
-                stack.unshift(json.path);
+            var stack=json.path!=undefined?[json.path]:[];
+            if(json.middleware){
+                if(Array.isArray(json.middleware))
+                    stack=stack.concat(json.middleware);
+                else
+                    stack.push(json.middleware);
+            }
+            stack.push(json.controller);
             router[(json.method==undefined)?"get":json.method].apply(router,stack);
         }else if(Array.isArray(json.children)){
             var newRouter=express.Router({mergeParams:true});
-            if(json.middleware)
-                newRouter.use(json.middleware);
+            if(json.middleware){
+                if(Array.isArray(json.middleware))
+                    json.middleware.forEach((f)=>{
+                        newRouter.use(f);
+                    });
+                else
+                    newRouter.use(json.middleware);
+            }
             parseJSONRoutes(json.children,newRouter);
             if(json.path)
                 router.use(json.path,newRouter);

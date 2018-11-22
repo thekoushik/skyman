@@ -11,9 +11,6 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var csrf = require('csurf');
-exports.csrfProtection = csrf({ cookie: true });
-
 app.use(cookieParser());
 
 const config = require('./config');
@@ -119,32 +116,3 @@ passport.deserializeUser((id, doneCallback)=>{
 exports.authenticateLogin=(req,res,next,cb)=>{
     passport.authenticate('local',cb)(req,res,next);
 };
-
-let mailTransporter = require('nodemailer').createTransport(config.email);
-const skipMail=false;//if true mail body will be consoled
-
-var sendEmail=exports.sendEmail=(to,subject,html,from=config.email.auth.user)=>{
-    if(skipMail) return html;
-    return mailTransporter.sendMail({
-        from: from,
-        to: to, 
-        subject: subject,
-        html: html
-    })
-}
-exports.sendEmailConfirm=(to,url)=>{
-    return new Promise((resolve,reject)=>{
-        require('nunjucks').render('email/confirm.html',{url:url},(err,str)=>{
-            if(err) reject(err);
-            else resolve(sendEmail(to,'Account Verification',str))
-        })
-    })
-}
-exports.sendEmailForgot=(to,url)=>{
-    return new Promise((resolve,reject)=>{
-        require('nunjucks').render('email/forgot.html',{url:url},(err,str)=>{
-            if(err) reject(err);
-            else resolve(sendEmail(to,'Reset Password',str))
-        })
-    })
-}

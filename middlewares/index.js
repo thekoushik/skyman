@@ -1,5 +1,7 @@
 var createError=require('http-errors');
+var csrf = require('csurf');
 
+exports.csrfProtection = csrf({ cookie: true });
 exports.shouldLogin=(req,res,next)=>{
     if(req.isAuthenticated()){
         res.locals.user = req.user;

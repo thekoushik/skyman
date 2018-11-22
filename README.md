@@ -51,7 +51,7 @@ Change ***config.js*** for database connection and email credentials
 |**models**|DB schema definitions|
 |**routes**|Router in json format|
 |**seeders**|Database seeding|
-|**services**|DB operations(used by controllers)|
+|**services**|DB operations(used by controllers) and email sending|
 |**static**|Static contents like css, js, images for client ui|
 |**system**|Internal functions used to manage application modules|
 |**utils**|Common utility functions used throughout the application|

@@ -1,10 +1,9 @@
-var securityManager=require('../index').manager;
-var services=require('../services');
+var {user_service,mail_service}=require('../services');
 var util=require('../utils');
 var config = require('../config');
 
 exports.userList=(req, res)=>{
-  services.user_service.userList(req.query.size,req.query.last)
+  user_service.userList(req.query.size,req.query.last)
     .then((list)=>{
       res.json(list)
     })
@@ -13,7 +12,7 @@ exports.userList=(req, res)=>{
     })
 };
 exports.user=(req,res)=>{
-  services.user_service.getUser(req.params.id)
+  user_service.getUser(req.params.id)
     .then((user)=>{
       res.status(200).json(user)
     })
@@ -26,16 +25,15 @@ exports.userCreate=(req,res)=>{
   var verifyToken=util.createToken();
   userdata.auth_token=verifyToken;
   const token=util.encodeAuthToken(userdata.username,verifyToken.token);
-  services.user_service.userCreate(userdata)
+  user_service.userCreate(userdata)
     .then((user)=>{
-      securityManager
-        .sendEmailConfirm(user.email,config.url+'/verify?token='+token)
-        .then((response)=>{
-            console.info(response);
-        })
-        .catch((err)=>{
-            console.error(err);
-        });
+      mail_service.sendEmailConfirm(user.email,config.url+'/verify?token='+token)
+      .then((response)=>{
+          console.info(response);
+      })
+      .catch((err)=>{
+          console.error(err);
+      });
       res.status(201).location(req.baseUrl+req.path+"/"+user._id).end();
     })
     .catch((err)=>{

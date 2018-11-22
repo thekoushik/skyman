@@ -1,4 +1,4 @@
-var user_service=require('../services').user_service;
+var {user_service}=require('../services');
 
 exports.dashboard=(req,res)=>{
     user_service.getAllUsers().then((list)=>{
