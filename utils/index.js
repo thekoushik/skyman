@@ -3,6 +3,7 @@ var crypto = require('crypto');
 exports.view=require('./view');
 
 exports.createId=(str)=> new mongoose.Types.ObjectId(str)
+exports.isValidId=(id)=>mongoose.Types.ObjectId.isValid(id)
 exports.isDataNotFound=(err)=>err instanceof mongoose.CastError;
 var dateAhead=exports.dateAhead=(dayAhead=1)=>{
     var date=new Date();

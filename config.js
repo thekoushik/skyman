@@ -1,15 +1,47 @@
 module.exports={
-    mongoURI:'mongodb://127.0.0.1/express-starter',
-    redis:{
-        host: '127.0.0.1',
-        port: 6379
+    development:{
+        mongoURI:'mongodb://127.0.0.1/express-starter',
+        redis:{
+            host: '127.0.0.1',
+            port: 6379
+        },
+        email:{
+            service: "gmail",
+            auth: {
+                user: "youremail@gmail.com",
+                pass: "yourpassword"
+            }
+        },
+        url: 'http://localhost:8000'
     },
-    email:{
-        service: "gmail",
-        auth: {
-            user: "youremail@gmail.com",
-            pass: "yourpassword"
-        }
+    production:{
+        mongoURI:'mongodb://127.0.0.1/express-starter',
+        redis:{
+            host: '127.0.0.1',
+            port: 6379
+        },
+        email:{
+            service: "gmail",
+            auth: {
+                user: "youremail@gmail.com",
+                pass: "yourpassword"
+            }
+        },
+        url: 'http://localhost:8000'
     },
-    url: 'http://localhost:8000'
+    test:{
+        mongoURI:'mongodb://127.0.0.1/express-starter',
+        redis:{
+            host: '127.0.0.1',
+            port: 6379
+        },
+        email:{
+            service: "gmail",
+            auth: {
+                user: "youremail@gmail.com",
+                pass: "yourpassword"
+            }
+        },
+        url: 'http://localhost:8000'
+    }
 }
