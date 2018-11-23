@@ -1,6 +1,6 @@
 var {user_service,mail_service}=require('../services');
 var util=require('../utils');
-var config = require('../config');
+var {config} = require('../system');
 
 exports.userList=(req, res)=>{
   user_service.userList(req.query.size,req.query.last)

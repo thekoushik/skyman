@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-const config = require('./config');
+const {config} = require('./system');
 
 app.use(expressSession({
     secret:process.env.SESSION_SECRET || "verysecret",
@@ -27,7 +27,7 @@ app.use(require('connect-flash')());
 app.use(passport.initialize());
 app.use(passport.session());
 
-const view=require('./utils').view;
+const {view}=require('./utils');
 //custom middleware
 app.use(function(req,res,next){
     res.locals.request=req;//provide access to request object from response
@@ -72,7 +72,7 @@ mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
     require('./seeders').seed();
 })
 
-var user_service = require('./services').user_service;
+var {user_service} = require('./services');
 
 passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     //access db and fetch user by username and password

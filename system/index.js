@@ -41,3 +41,4 @@ exports.createRouterFromJson=function(json){
     parseJSONRoutes(json,router);
     return router;
 }
+exports.config=require('../config')[process.env.mode || 'development'];

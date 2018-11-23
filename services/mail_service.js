@@ -1,5 +1,5 @@
 var nunjucks=require('nunjucks');
-var config=require('../config');
+var {config}=require('../system');
 let mailTransporter = require('nodemailer').createTransport(config.email);
 const skipMail=false;//if true mail body will be consoled
 

@@ -1,4 +1,4 @@
-var user_service=require('../services').user_service;
+var {user_service}=require('../services');
 
 module.exports=()=>{
     user_service.count().then((count)=>{

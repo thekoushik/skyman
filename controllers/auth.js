@@ -2,7 +2,7 @@ var securityManager=require('../index').manager;
 var util=require('../utils');
 var {user_service,mail_service}=require('../services');
 var user_model=require('../models').user;
-var config = require('../config');
+var {config} = require('../system');
 
 exports.loginPage=(req,res)=>{
     if(req.isAuthenticated())
