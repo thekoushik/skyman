@@ -1,8 +1,10 @@
-var admin_seeder=require('./admin.seeder');
 const allseeders={
-    'admin': admin_seeder
+    'admin': require('./admin.seeder'),
+    'user': require('./user.seeder'),
+    'article': require('./article.seeder')
 };
 var seeder_names=exports.seeders=Object.keys(allseeders);
+exports.seeder_names=seeder_names;
 
 exports.seed=(seeders)=>{
     var seedersToSeed;

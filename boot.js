@@ -69,7 +69,7 @@ mongoose.plugin((schema, options)=>{
     schema.post('findOneAndUpdate', postHook);
 })
 mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
-    require('./seeders').seed();
+    require('./seeders').seed('admin');
 })
 
 var {user_service} = require('./services');

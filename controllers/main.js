@@ -53,8 +53,7 @@ exports.viewArticlePage=(req,res,next)=>{
 }
 exports.createArticle=(req,res,next)=>{
     var data=req.body;
-    data.user=req.user._id;
-    article_service.createArticle(data)
+    article_service.createArticle(req.user._id,data)
     .then((d)=>{
         req.flash('success', "Article created");
         res.redirect('/articles');

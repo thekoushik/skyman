@@ -60,6 +60,7 @@ Change ***config.js*** for database connection and email credentials
 
 ### Generators
 Generators are defined in **system/generator.js**
+
 ##### View list of generators
 ```
 npm run gen
@@ -69,6 +70,19 @@ npm run gen
    npm run gen model model_name
    ```
    will create **model_name.js** in **models** directory with name **ModelName**
+
+### Seed
+All seeders in **seeders** directory must be enlisted in the **allseeders** object in **seeders/index.js** so they can be run from npm scripts
+
+#### View seeders
+```
+npm run seed
+```
+#### Run seeds
+```
+npm run seed seeder_name1 seeder_name2
+```
+
 ### Features
 
 * Sign Up (with [vuejs](https://vuejs.org) and [axios](https://github.com/axios/axios))
