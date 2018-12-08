@@ -8,9 +8,9 @@ require('nunjucks').configure('views', {
     express: app
 });
 
-module.exports.manager = require('./boot');
+var {router} = require('./system');
 
-app.use(require('./routes'));
+app.use(router.createRouterFromJson(require('./routes')));
 
 var port=process.env.PORT || 8000;
 app.listen(port,()=>{

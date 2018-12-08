@@ -1,4 +1,4 @@
-var app = require('./index');
+var app = require('../index');
 //setup
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-const {config} = require('./system');
+const config=global.config=require('../config')[process.env.mode || 'development'];
 
 app.use(expressSession({
     secret:process.env.SESSION_SECRET || "verysecret",
@@ -27,7 +27,7 @@ app.use(require('connect-flash')());
 app.use(passport.initialize());
 app.use(passport.session());
 
-const {view}=require('./utils');
+const {view}=require('../utils');
 //custom middleware
 app.use(function(req,res,next){
     res.locals.request=req;//provide access to request object from response
@@ -69,10 +69,10 @@ mongoose.plugin((schema, options)=>{
     schema.post('findOneAndUpdate', postHook);
 })
 mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
-    require('./seeders').seed('admin');
+    require('../seeders').seed('admin');
 })
 
-var {user_service} = require('./services');
+var {user_service} = require('../services');
 
 passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     //access db and fetch user by username and password

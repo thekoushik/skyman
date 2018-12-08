@@ -1,7 +1,8 @@
 var Article=require('../models').article;
 
 exports.createArticle=(user_id,data)=>{
-    return Article.create({...data,user:user_id});
+    data.user=user_id;
+    return Article.create(data);
 }
 exports.updateArticle=(user_id, id,data)=>{
     return Article.findOneAndUpdate({_id:id,user:user_id},data).exec()

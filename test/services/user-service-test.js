@@ -2,7 +2,7 @@ var assert = require('assert');
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised).should();
-var config=require('../../config').test;
+const config=global.config = require('../../config').test;
 var {user_service}=require('../../services');
 var utils=require('../../utils');
 

@@ -9,7 +9,7 @@ Starter project for express web app :+1:
 |Mongodb| 3.2.0|[link](https://www.mongodb.com/download-center)|
 |Redis (optional)| 3.0|[linux/mac](https://redis.io/download) , [windows](https://github.com/microsoftarchive/redis/releases)|
 
-**_Note_:** If you do not want to use Redis, open **boot.js** and comment the two lines where **RedisStore** is used
+**_Note_:** If you do not want to use Redis, open **system/kernel.js** and comment the two lines where **RedisStore** is used
 
 ## Install Dependencies
 
@@ -51,9 +51,9 @@ Change ***config.js*** for database connection and email credentials
 |**models**|DB schema definitions|
 |**routes**|Router in json format|
 |**seeders**|Database seeding|
-|**services**|DB operations(used by controllers) and email sending|
+|**services**|DB operations(used by controllers, test-cases)|
 |**static**|Static contents like css, js, images for client ui|
-|**system**|Internal functions used to manage application modules|
+|**system**|Internal application management modules|
 |**utils**|Common utility functions used throughout the application|
 |**views**|Html files (with [nunjucks](https://mozilla.github.io/nunjucks))|
 |**test**|[Mocha](https://mochajs.org/) Testcases|

@@ -1,8 +1,7 @@
-var securityManager=require('../index').manager;
+var {kernel}=require('../system');
 var util=require('../utils');
 var {user_service,mail_service}=require('../services');
 var user_model=require('../models').user;
-var {config} = require('../system');
 
 exports.loginPage=(req,res)=>{
     if(req.isAuthenticated())
@@ -18,7 +17,7 @@ exports.registerPage=(req,res)=>{
     res.render('auth/join.html',{});
 };
 exports.login=(req,res,next)=>{
-    securityManager.authenticateLogin(req,res,next,(err,user,info)=>{
+    kernel.authenticateLogin(req,res,next,(err,user,info)=>{
         if (err) return next(err);
         if (!user){
             if(info.message)
@@ -46,7 +45,7 @@ exports.resend_verify=(req,res)=>{
         .then((user)=>{
             if(!user.enabled){
                 const token=util.encodeAuthToken(user.username,user.auth_token.token);
-                mail_service.sendEmailConfirm(user.email,config.url+'/verify?token='+token)
+                mail_service.sendEmailConfirm(user.email,global.config.url+'/verify?token='+token)
                 .then((response)=>{
                     console.info(response);
                 })
@@ -114,7 +113,7 @@ exports.forgot=(req,res)=>{
         })
         .then((newuser)=>{
             const token=util.encodeAuthToken(newuser.username,newuser.auth_token.token);
-            mail_service.sendEmailForgot(newuser.email,config.url+'/reset?token='+token)
+            mail_service.sendEmailForgot(newuser.email,global.config.url+'/reset?token='+token)
             .then((response)=>{
                 console.info(response);
             })
