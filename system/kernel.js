@@ -35,6 +35,16 @@ app.use(function(req,res,next){
     next();
 })
 
+/*
+Usage:
+    throw make404()
+*/
+global.make404=(msg)=>{
+    var err=new Error(msg || "Page not found");
+    err.code = '404';
+    return err;
+}
+
 var mongoose = require('mongoose');
 mongoose.Promise=global.Promise;
 mongoose.plugin((schema, options)=>{
@@ -69,7 +79,7 @@ mongoose.plugin((schema, options)=>{
     schema.post('findOneAndUpdate', postHook);
 })
 mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
-    require('../seeders').seed('admin');
+    require('../seeders').seed('admin');//disable this line if you don't want default admin seeding
 })
 
 var {user_service} = require('../services');
