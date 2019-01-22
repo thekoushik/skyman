@@ -1,5 +1,11 @@
-var {user_service,article_service} = require('../services');
+var {user_service,article_service} = require('../database').services;
 var util=require('../utils');
+var gateman=require('gateman');
+var userFormValidate=gateman({
+    title:"required",
+    content:"minlength:10"
+});
+var userProfileValidate=gateman({name:"minlength:5"});
 
 exports.index=(req,res)=>{
     if(req.isAuthenticated()){
@@ -24,6 +30,12 @@ exports.profile=(req,res)=>{
     res.render('user/profile.html');
 }
 exports.save_profile=(req,res,next)=>{
+    var err=userProfileValidate({name:req.body.name},{flatten:true});
+    if(err){
+        for(var key in err)
+            req.flash('error', key+": "+err[key]);
+        return goBackWithData(req,res);
+    }
     user_service.updateUser(req.user._id,{name: req.body.name})
     .then((user)=>{
         req.flash('success','Profile updated.');
@@ -54,6 +66,12 @@ exports.viewArticlePage=(req,res,next)=>{
 }
 exports.createArticle=(req,res,next)=>{
     var data=req.body;
+    var err=userFormValidate(data,{flatten:true});
+    if(err){
+        for(var key in err)
+            req.flash('error', key+": "+err[key]);
+        return goBackWithData(req,res);
+    }
     article_service.createArticle(req.user._id,data)
     .then((d)=>{
         req.flash('success', "Article created");
@@ -79,7 +97,14 @@ exports.articleEditPage=(req,res,next)=>{
     .catch((e)=>next(util.isDataNotFound(e)?null:e));
 }
 exports.editArticle=(req,res,next)=>{
-    article_service.updateArticle(req.user._id, req.params.id,req.body)
+    var data=req.body;
+    var err=userFormValidate(data,{flatten:true});
+    if(err){
+        for(var key in err)
+            req.flash('error', key+": "+err[key]);
+        return goBackWithData(req,res);
+    }
+    article_service.updateArticle(req.user._id, req.params.id,data)
     .then((a)=>{
         req.flash('success',"Article updated");
         res.redirect('/articles');

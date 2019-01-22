@@ -1,5 +1,5 @@
-# express-starter
-Starter project for express web app :+1:
+# SkyMan
+Web framework for nodejs
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@ Starter project for express web app :+1:
 |Mongodb| 3.2.0|[link](https://www.mongodb.com/download-center)|
 |Redis (optional)| 3.0|[linux/mac](https://redis.io/download) , [windows](https://github.com/microsoftarchive/redis/releases)|
 
-**_Note_:** If you do not want to use Redis, open **system/kernel.js** and comment the two lines where **RedisStore** is used
+**_Note_:** If you do not want to use Redis, remove the redis property in **config.js**
 
 ## Install Dependencies
 
@@ -48,10 +48,10 @@ Change ***config.js*** for database connection and email credentials
 |:----:|----|
 |**controllers**|Functions for routing endpoints|
 |**middlewares**|Routing middlewares|
-|**models**|DB schema definitions|
 |**routes**|Router in json format|
-|**seeders**|Database seeding|
-|**services**|DB operations(used by controllers, test-cases)|
+|**database/models**|DB schema definitions|
+|**database/seeders**|Database seeding|
+|**database/services**|DB operations(used by controllers, test-cases)|
 |**static**|Static contents like css, js, images for client ui|
 |**system**|Internal application management modules|
 |**utils**|Common utility functions used throughout the application|
@@ -69,10 +69,10 @@ npm run gen
    ```
    npm run gen model model_name
    ```
-   will create **model_name.js** in **models** directory with name **ModelName**
+   will create **model_name.js** in **database/models** directory with name **ModelName**
 
 ### Seed
-All seeders in **seeders** directory must be enlisted in the **allseeders** object in **seeders/index.js** so they can be run from npm scripts
+All seeders in **database/seeders** directory must be enlisted in the **allseeders** object in **database/seeders/index.js** so they can be run from npm scripts
 
 #### View seeders
 ```
@@ -83,7 +83,7 @@ npm run seed
 npm run seed seeder_name1 seeder_name2
 ```
 
-### Features
+### With working modules
 
 * Sign Up (with [vuejs](https://vuejs.org) and [axios](https://github.com/axios/axios))
 * Account activation through email
@@ -92,8 +92,3 @@ npm run seed seeder_name1 seeder_name2
 * Seperate Admin/User views
 * Simple Blog ([**localhost:8000/blog**](localhost:8000/blog))
 * Article CRUD from user account
-
-### UI
-
-* Bootstrap@3.3.7
-* JQuery@1.12.4

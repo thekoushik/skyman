@@ -3,7 +3,6 @@ var app = require('../index');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
-var RedisStore = require('connect-redis')(expressSession);//////disable this line for Without Redis
 var passport = require('passport');
 var passportLocal = require('passport-local');
 var helmet = require('helmet');
@@ -15,12 +14,18 @@ app.use(cookieParser());
 
 const config=global.config=require('../config')[process.env.mode || 'development'];
 
-app.use(expressSession({
+var sessionConfig={
     secret:process.env.SESSION_SECRET || "verysecret",
     resave: true,
-    saveUninitialized: true,
-    store: new RedisStore(config.redis)/////////////////////////disable this line for Without Redis
-}));
+    saveUninitialized: true
+};
+
+if(config.redis){
+    var RedisStore = require('connect-redis')(expressSession);
+    sessionConfig.store=new RedisStore(config.redis);
+}
+
+app.use(expressSession(sessionConfig));
 
 app.use(require('connect-flash')());
 //end setup
@@ -32,8 +37,14 @@ const {view}=require('../utils');
 app.use(function(req,res,next){
     res.locals.request=req;//provide access to request object from response
     res.locals.view=view;//utility functions for view
+
+    //old function to access old data
+    var old=req.flash('_old_');
+    old=old.length?old[0]:{};
+    res.locals.old=(prop,default_data)=>(old[prop]==undefined)?default_data:old[prop];
+
     next();
-})
+});
 
 /*
 Usage:
@@ -44,45 +55,14 @@ global.make404=(msg)=>{
     err.code = '404';
     return err;
 }
+global.goBackWithData=(req,res)=>{
+    req.flash('_old_',req.body);
+    return res.redirect('back');
+}
 
-var mongoose = require('mongoose');
-mongoose.Promise=global.Promise;
-mongoose.plugin((schema, options)=>{
-    var indexes=schema.indexes();
-    if(indexes.length==0) return;
-    var postHook=(error, _, next)=>{
-        if(error.name=='MongoError' && error.code==11000){
-            var regex=/index: (.+) dup key:/;
-            var matches=regex.exec(error.message);
-            if(matches){
-                matches=matches[1];
-                for(var i=0;i<indexes.length;i++){
-                    for(var field in indexes[i][0])
-                        if(indexes[i][1].unique && matches.indexOf('$'+field)>0){
-                            var e={}
-                            e[field]=new mongoose.Error.ValidatorError({
-                                type: 'unique',
-                                path: field,
-                                message: field+' already exist'
-                            })
-                            var newError = new mongoose.Error.ValidationError();
-                            newError.errors = e;
-                            return next(newError);
-                        }
-                }
-            }
-        }
-        next(error);
-    }
-    schema.post('save', postHook);
-    schema.post('update', postHook);
-    schema.post('findOneAndUpdate', postHook);
-})
-mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
-    require('../seeders').seed('admin');//disable this line if you don't want default admin seeding
-})
-
-var {user_service} = require('../services');
+//connect to database
+require('../database/connector').connect();
+var {user_service} = require('../database/services');
 
 passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     //access db and fetch user by username and password

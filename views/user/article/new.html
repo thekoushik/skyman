@@ -1,7 +1,7 @@
 {% extends "user/layout/master.html" %}
 
 {% block title %}
-ExpressStarter - New Article
+SkyMan - New Article
 {% endblock %}
 
 {% block css %}
@@ -18,15 +18,15 @@ ExpressStarter - New Article
         <form action="/articles" method="post">
             <div class="form-group">
                 <label for="exampleInputEmail1">Title</label>
-                <input type="text" class="form-control" placeholder="Title" name="title" required>
+                <input type="text" class="form-control" placeholder="Title" name="title" required value="{{old('title')}}">
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Tag</label>
-                <input type="text" class="form-control" name="tag" placeholder="Tag(Sperated by space)" >
+                <input type="text" class="form-control" name="tag" placeholder="Tag(Sperated by space)" value="{{old('tag')}}">
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1">Content</label>
-                <textarea name="content" class="form-control" rows="10" placeholder="Enter Content"></textarea>
+                <textarea name="content" class="form-control" rows="10" placeholder="Enter Content">{{old('content')}}</textarea>
             </div>
             <button type="submit" class="btn btn-success">Save</button>
         </form>

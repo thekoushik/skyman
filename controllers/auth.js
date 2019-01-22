@@ -1,7 +1,7 @@
 var {kernel}=require('../system');
 var util=require('../utils');
-var {user_service,mail_service}=require('../services');
-var user_model=require('../models').user;
+var {user_service,mail_service}=require('../database').services;
+var user_model=require('../database').models.user;
 
 exports.loginPage=(req,res)=>{
     if(req.isAuthenticated())

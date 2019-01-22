@@ -1,7 +1,7 @@
 {
-  "name": "express_starter",
+  "name": "skyman",
   "version": "0.0.1",
-  "description": "Starter express passport",
+  "description": "Web framework for nodejs",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index",
@@ -13,7 +13,7 @@
   "author": "Koushik Seal",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thekoushik/express-starter.git"
+    "url": "https://github.com/thekoushik/skyman.git"
   },
   "license": "MIT",
   "dependencies": {
@@ -24,6 +24,7 @@
     "csurf": "^1.9.0",
     "express": "^4.16.4",
     "express-session": "^1.14.2",
+    "gateman": "^0.2.1",
     "helmet": "^3.15.0",
     "http-errors": "^1.7.1",
     "mongoose": "^4.13.17",

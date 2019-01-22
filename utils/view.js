@@ -1,4 +1,4 @@
-exports.alertToArray=function(flashes){
+exports.alertToArray=(flashes)=>{
     var alerts=[];
     const colors={
         error:'alert-danger',
@@ -10,7 +10,7 @@ exports.alertToArray=function(flashes){
         var type='alert-info';
         if(colors[alert_type])
             type=colors[alert_type];
-        alerts=alerts.concat(flashes[alert_type].map(function(msg){
+        alerts=alerts.concat(flashes[alert_type].map((msg)=>{
             return {type:type,message:msg};
         }));
     }

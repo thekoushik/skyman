@@ -1,4 +1,4 @@
-var {user_service,mail_service}=require('../services');
+var {user_service,mail_service}=require('../database').services;
 var util=require('../utils');
 
 exports.userList=(req, res)=>{

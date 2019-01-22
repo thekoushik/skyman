@@ -1,16 +1,12 @@
 const config=global.config = require('../config').development;
-var {seed,seeder_names} = require('../seeders');
+var {seeder,connect} = require('../database');
 
 if(process.argv.length<3)
     console.log(`Seed:
 npm run seed <seeder_name1> [<seeder_name2>] ..
 
 Available Seeders:
-${seeder_names}`);
+${seeder.seeder_names}`);
 else{
-    var mongoose = require('mongoose');
-    mongoose.Promise=global.Promise;
-    mongoose.connect(config.mongoURI,{ useMongoClient: true}).then(()=>{
-        seed(process.argv.slice(2));
-    })
+    connect(true).then(()=>seeder.seed(process.argv.slice(2)));
 }

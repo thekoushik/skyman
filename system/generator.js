@@ -2,7 +2,7 @@ var path=require('path');
 var fs=require('fs');
 var util=require('../utils');
 function genModel(table){
-    var file=path.resolve('models',table+'.js')
+    var file=path.resolve('database','models',table+'.js')
     if(fs.existsSync(file)) return false;
     var tableName=util.snakeToCamel(table);
     var start=`var mongoose     = require('mongoose');

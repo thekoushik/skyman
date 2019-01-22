@@ -1,4 +1,4 @@
-var {user_service}=require('../services');
+var {user_service}=require('../database').services;
 
 exports.dashboard=(req,res)=>{
     user_service.getAllUsers().then((list)=>{
