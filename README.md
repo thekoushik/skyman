@@ -1,6 +1,9 @@
 # SkyMan
 Web framework for nodejs
 
+# Documentation
+[here](documentation.md)
+
 ## Prerequisites
 
 | Technology | Minimum Version Required | Website |

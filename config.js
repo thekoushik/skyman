@@ -1,6 +1,6 @@
 module.exports={
     development:{
-        mongoURI:'mongodb://127.0.0.1/express-starter',
+        mongoURI:'mongodb://127.0.0.1/skyman-demo',
         redis:{
             host: '127.0.0.1',
             port: 6379
@@ -15,7 +15,7 @@ module.exports={
         url: 'http://localhost:8000'
     },
     production:{
-        mongoURI:'mongodb://127.0.0.1/express-starter',
+        mongoURI:'mongodb://127.0.0.1/skyman-demo',
         redis:{
             host: '127.0.0.1',
             port: 6379
@@ -30,7 +30,7 @@ module.exports={
         url: 'http://localhost:8000'
     },
     test:{
-        mongoURI:'mongodb://127.0.0.1/express-starter',
+        mongoURI:'mongodb://127.0.0.1/skyman-demo',
         redis:{
             host: '127.0.0.1',
             port: 6379
