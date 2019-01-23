@@ -1,8 +1,9 @@
-var {user_service,mail_service}=require('../database').services;
+var {user_provider}=require('../database').providers;
+var {mail_service}=require('../services');
 var util=require('../utils');
 
 exports.userList=(req, res)=>{
-  user_service.userList(req.query.size,req.query.last)
+  user_provider.userList(req.query.size,req.query.last)
     .then((list)=>{
       res.json(list)
     })
@@ -11,7 +12,7 @@ exports.userList=(req, res)=>{
     })
 };
 exports.user=(req,res)=>{
-  user_service.getUser(req.params.id)
+  user_provider.getUser(req.params.id)
     .then((user)=>{
       res.status(200).json(user)
     })
@@ -24,7 +25,7 @@ exports.userCreate=(req,res)=>{
   var verifyToken=util.createToken();
   userdata.auth_token=verifyToken;
   const token=util.encodeAuthToken(userdata.username,verifyToken.token);
-  user_service.userCreate(userdata)
+  user_provider.userCreate(userdata)
     .then((user)=>{
       mail_service.sendEmailConfirm(user.email,global.config.url+'/verify?token='+token)
       .then((response)=>{

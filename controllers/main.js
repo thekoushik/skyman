@@ -1,4 +1,4 @@
-var {user_service,article_service} = require('../database').services;
+var {user_provider,article_provider} = require('../database').providers;
 var util=require('../utils');
 var gateman=require('gateman');
 var userFormValidate=gateman({
@@ -36,7 +36,7 @@ exports.save_profile=(req,res,next)=>{
             req.flash('error', key+": "+err[key]);
         return goBackWithData(req,res);
     }
-    user_service.updateUser(req.user._id,{name: req.body.name})
+    user_provider.updateUser(req.user._id,{name: req.body.name})
     .then((user)=>{
         req.flash('success','Profile updated.');
         req.login(user, (err)=>{
@@ -46,7 +46,7 @@ exports.save_profile=(req,res,next)=>{
     })
 }
 exports.allArticlePage=(req,res,next)=>{
-    article_service.getAllArticles(req.query.last)
+    article_provider.getAllArticles(req.query.last)
     .then((list)=>{
         var data={
             list:list
@@ -58,7 +58,7 @@ exports.allArticlePage=(req,res,next)=>{
     .catch((e)=>next(e));
 }
 exports.viewArticlePage=(req,res,next)=>{
-    article_service.getArticleFromOutside(req.params.id)
+    article_provider.getArticleFromOutside(req.params.id)
     .then((a)=>{
         res.render('article.html',{data:a});
     })
@@ -72,7 +72,7 @@ exports.createArticle=(req,res,next)=>{
             req.flash('error', key+": "+err[key]);
         return goBackWithData(req,res);
     }
-    article_service.createArticle(req.user._id,data)
+    article_provider.createArticle(req.user._id,data)
     .then((d)=>{
         req.flash('success', "Article created");
         res.redirect('/articles');
@@ -83,14 +83,14 @@ exports.newArticlePage=(req,res,next)=>{
     res.render('user/article/new.html');
 }
 exports.articleListPage=(req,res,next)=>{
-    article_service.getUserArticles(req.user._id)
+    article_provider.getUserArticles(req.user._id)
     .then((list)=>{
         res.render('user/article/list.html',{list:list});
     })
     .catch((e)=>next(e));
 }
 exports.articleEditPage=(req,res,next)=>{
-    article_service.getArticle(req.user._id,req.params.id)
+    article_provider.getArticle(req.user._id,req.params.id)
     .then((a)=>{
         res.render('user/article/edit.html',{data:a});
     })
@@ -104,7 +104,7 @@ exports.editArticle=(req,res,next)=>{
             req.flash('error', key+": "+err[key]);
         return goBackWithData(req,res);
     }
-    article_service.updateArticle(req.user._id, req.params.id,data)
+    article_provider.updateArticle(req.user._id, req.params.id,data)
     .then((a)=>{
         req.flash('success',"Article updated");
         res.redirect('/articles');
@@ -112,7 +112,7 @@ exports.editArticle=(req,res,next)=>{
     .catch((e)=>next(util.isDataNotFound(e)?null:e));
 }
 exports.deleteArticle=(req,res,next)=>{
-    article_service.removeArticle(req.user._id,req.params.id)
+    article_provider.removeArticle(req.user._id,req.params.id)
     .then((_)=>{
         req.flash('success','Article removed');
         res.redirect('/articles');

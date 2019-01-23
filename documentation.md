@@ -15,7 +15,7 @@ Simple but expandable.
 -  [Helpers](#helpers)
 
 # Overview
-SkyMan is the simplest nodejs framework that runs on top of expressjs.
+SkyMan is the simplest nodejs open framework that runs on top of expressjs. Each and every module can be customized or overridable at any extent. You can even replace its modules with third-party libraries or your own code.
 
 # Controllers
 The **controllers** folder contains all the controllers and are exported from **controllers/index.js**. A controller endpoint is an exported express **handler function**.
@@ -45,8 +45,8 @@ The **database/index.js** exports all the modules that relates to database opera
 ## Models
 [MongooseJS](https://mongoosejs.com) schemas are defined in the **database/models** folder and are exported from **database/models/index.js**.
 
-## Services
-The **database/services** folder contains functions to interact the database via the exported models from **database/models** folder.
+## Providers
+The **database/providers** folder contains functions to interact the database via the exported models from **database/models** folder.
 
 ## Seeders
 Seeder is a javascript file containing a default export  that creates dummy data into the database. All seeders in **database/seeders** directory must be enlisted in the ``` allseeders ``` object in **database/seeders/index.js** so they can be run from npm scripts
@@ -68,23 +68,24 @@ exports.getUserArticles=(user_id)=>{
 
 # Routes
 The **routes** folder contains all the route endpoints of the application. The main route is exported as default from **index.js**. You may create module based files of routes and require them in **index.js** with a path.
+
 #### Single Route
 ```javascript
 {
 	path: "route_path",
 	method: "method_name",
-	controller: controller.function_name
+	middleware: ["middleaware.function_name1", "middleaware.function_name2"],
+	controller: "controller.function_name"
 }
 ```
 
 #### Example
 ##### routes/my_routes.js
 ```javascript
-var { my_controller }=require('../controllers');
 module.exports=[
 	{
 		path: "/",
-		controller: my_controller.get_everything
+		controller: "my_controller.my_function"
 	}
 ]
 ```
@@ -100,9 +101,13 @@ const routerJson=[
  } , {
  . . .
 ```
+> **Warning**: Beware of circular routes.
 
 # Views
 The **view** folder contains all the html files that are being rendered from controllers. [Nunjucks](https://mozilla.github.io/nunjucks) templating engine is used to render the html files. The reason for using Nunjucks is the **template inheritance** feature.
+
+# Services
+The **services** folder contains application services like Email, Chat etc.
 
 # Generators
 

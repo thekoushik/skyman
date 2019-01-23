@@ -1,9 +1,9 @@
-var {user_service}=require('../services');
+var {user_provider}=require('../providers');
 
 module.exports=()=>{
-    user_service.count().then((count)=>{
+    user_provider.count().then((count)=>{
         if(count==0)
-            return user_service.userCreate({
+            return user_provider.userCreate({
                 name:"ADMINISTRATOR",
                 email:"admin@mail.com",
                 username:"admin",

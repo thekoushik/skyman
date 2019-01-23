@@ -1,8 +1,8 @@
 # SkyMan
-Web framework for nodejs
+The Open Web Framework for nodejs
 
 # Documentation
-[here](documentation.md)
+[documentation.md](documentation.md)
 
 ## Prerequisites
 
@@ -54,7 +54,8 @@ Change ***config.js*** for database connection and email credentials
 |**routes**|Router in json format|
 |**database/models**|DB schema definitions|
 |**database/seeders**|Database seeding|
-|**database/services**|DB operations(used by controllers, test-cases)|
+|**database/providers**|DB operations(used by controllers, test-cases)|
+|**services**|Application services such as email service|
 |**static**|Static contents like css, js, images for client ui|
 |**system**|Internal application management modules|
 |**utils**|Common utility functions used throughout the application|

@@ -1,6 +1,6 @@
 var nunjucks=require('nunjucks');
 var mailTransporter = require('nodemailer').createTransport(global.config.email);
-const skipMail=false;//if true mail body will be consoled
+const skipMail=global.config.email.skip;//if true mail body will be consoled
 
 var sendEmail=exports.sendEmail=(to,subject,html,from=global.config.email.auth.user)=>{
     if(skipMail) return html;

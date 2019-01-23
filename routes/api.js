@@ -1,21 +1,20 @@
-var apicontroller=require('../controllers').api;
 var middleware=require('../middlewares');
 
 module.exports=[
     {
         path:"/users",
-        controller: apicontroller.userList
+        controller: "api.userList"
     },{
         path:"/users/:id",
-        controller: apicontroller.user,
+        controller: "api.user",
         middleware:[ middleware.hasRole("admin") ]
     },{
         path:"/users",
         method:"post",
-        controller: apicontroller.userCreate
+        controller: "api.userCreate"
     },{
         path:"/profile",
-        controller: apicontroller.info,
+        controller: "api.info",
         middleware:[ middleware.shouldLogin ]
     }
 ];

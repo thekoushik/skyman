@@ -1,42 +1,40 @@
-var userController=require('../controllers').main;
-
 module.exports=[
     {
         path: "/dashboard",
-        controller: userController.dashboard
+        controller: "main.dashboard"
     },{
         path: "/profile",
-        controller: userController.profile
+        controller: "main.profile"
     },{
         path: "/profile",
         method: "post",
-        controller: userController.save_profile
+        controller: "main.save_profile"
     },{
         path:"/articles",
         children:[
             {
                 path:"/",
-                controller:userController.articleListPage
+                controller:"main.articleListPage"
             },{
                 path:"/",
                 method:"post",
-                controller:userController.createArticle
+                controller:"main.createArticle"
             },{
                 path:"/new",
-                controller:userController.newArticlePage
+                controller:"main.newArticlePage"
             },{
                 path:"/:id",
-                controller:userController.articleEditPage
+                controller:"main.articleEditPage"
             },{
                 path:"/:id",
                 method:"post",
-                controller:userController.editArticle
+                controller:"main.editArticle"
             },{
                 path:"/:id/edit",
-                controller:userController.articleEditPage
+                controller:"main.articleEditPage"
             },{
                 path:"/:id/delete",
-                controller:userController.deleteArticle
+                controller:"main.deleteArticle"
             }
         ]
     }

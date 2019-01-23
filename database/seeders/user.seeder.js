@@ -1,8 +1,8 @@
-var {user_service}=require('../services');
+var {user_provider}=require('../providers');
 var faker = require('faker');
 
 module.exports=()=>{
-    return user_service.userCreate(Array.apply(null,{length:10}).map(()=>{
+    return user_provider.userCreate(Array.apply(null,{length:10}).map(()=>{
         return {
             name:faker.name.findName(),
             email:faker.internet.email(),

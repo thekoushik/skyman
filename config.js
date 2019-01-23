@@ -10,7 +10,8 @@ module.exports={
             auth: {
                 user: "youremail@gmail.com",
                 pass: "yourpassword"
-            }
+            },
+            skip:true
         },
         url: 'http://localhost:8000'
     },
@@ -25,7 +26,8 @@ module.exports={
             auth: {
                 user: "youremail@gmail.com",
                 pass: "yourpassword"
-            }
+            },
+            skip:false
         },
         url: 'http://localhost:8000'
     },
@@ -40,7 +42,8 @@ module.exports={
             auth: {
                 user: "youremail@gmail.com",
                 pass: "yourpassword"
-            }
+            },
+            skip:false
         },
         url: 'http://localhost:8000'
     }

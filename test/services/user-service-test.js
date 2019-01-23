@@ -3,13 +3,14 @@ var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised).should();
 const config=global.config = require('../../config').test;
-var {user_service}=require('../../services');
+var {connect} = require('../../database');
+var {user_provider}=require('../../database').providers;
 var utils=require('../../utils');
 
 before(function (done) {
-  var mongoose=require('mongoose');
-  mongoose.Promise=global.Promise;
-  mongoose.connect(config.mongoURI,{ useMongoClient: true},done)
+  connect(true).then((_)=>{
+    done();
+  });
 });
 
 describe('Express-Starter Test', function() {
@@ -23,7 +24,7 @@ describe('Express-Starter Test', function() {
   });
   describe('#user module ', function() {
     it('#getuser "abcdef0123456789abcdef01" should become null', function() {
-      return user_service.getUser("abcdef0123456789abcdef01").should.become(null);
+      return user_provider.getUser("abcdef0123456789abcdef01").should.become(null);
     });
   });
 });

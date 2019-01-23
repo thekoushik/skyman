@@ -1,9 +1,8 @@
-var controllers=require('../controllers');
 module.exports=[
     {
         path: "/dashboard",
-        controller: controllers.admin.dashboard
+        controller: "admin.dashboard"
     },{
-        controller: controllers.main.errorHandler
+        controller: "main.errorHandler"
     }
 ]

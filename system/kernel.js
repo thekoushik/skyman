@@ -62,7 +62,7 @@ global.goBackWithData=(req,res)=>{
 
 //connect to database
 require('../database/connector').connect();
-var {user_service} = require('../database/services');
+var {user_provider} = require('../database').providers;
 
 passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     //access db and fetch user by username and password
@@ -71,7 +71,7 @@ passport.use(new passportLocal.Strategy((username,password,doneCallback)=>{
     doneCallback(null,null)//bad or username missing
     doneCallback(new Error("Internal Error!"))//internal error
     */
-    user_service.getUserByCredentials(username,password)
+    user_provider.getUserByCredentials(username,password)
     .then((user)=>{
         if(!user)
             doneCallback(null,false,{message:'Wrong credential'});
@@ -94,7 +94,7 @@ passport.serializeUser((user,doneCallback)=>{
     doneCallback(null, user._id);
 });
 passport.deserializeUser((id, doneCallback)=>{
-    user_service.getUser(id)
+    user_provider.getUser(id)
     .then((user)=>{
         doneCallback(null,user);
     })

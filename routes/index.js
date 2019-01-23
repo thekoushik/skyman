@@ -1,16 +1,15 @@
 var middleware = require('../middlewares');
-var controllers = require('../controllers');
 
 const routerJson=[
     {
         path:"/",
-        controller: controllers.main.index
+        controller: "main.index"
     },{
         path:"/blog",
-        controller:controllers.main.allArticlePage
+        controller:"main.allArticlePage"
     },{
         path:"/blog/:id",
-        controller:controllers.main.viewArticlePage
+        controller:"main.viewArticlePage"
     },
     ...require('./auth'),
     {
@@ -21,13 +20,13 @@ const routerJson=[
         middleware: middleware.hasRole("admin"),
         children:require('./admin')
     },{
-        middleware: middleware.shouldLogin,
+        middleware: "index.shouldLogin",
         children:require('./user')
     },{
-        controller: controllers.main.errorHandler
+        controller: "main.errorHandler"
     },{
         path: "*",
-        controller: controllers.main.notFound
+        controller: "main.notFound"
     }
 ];
 module.exports=routerJson;

@@ -1,6 +1,7 @@
 var {kernel}=require('../system');
 var util=require('../utils');
-var {user_service,mail_service}=require('../database').services;
+var {user_provider}=require('../database').providers;
+var {mail_service}=require('../services');
 var user_model=require('../database').models.user;
 
 exports.loginPage=(req,res)=>{
@@ -41,7 +42,7 @@ exports.resend_verify_page=(req,res)=>{
     res.render('auth/resend.html');
 }
 exports.resend_verify=(req,res)=>{
-    user_service.getUserByEmail(req.body.email)
+    user_provider.getUserByEmail(req.body.email)
         .then((user)=>{
             if(!user.enabled){
                 const token=util.encodeAuthToken(user.username,user.auth_token.token);
@@ -65,7 +66,7 @@ exports.resend_verify=(req,res)=>{
 exports.verify=(req,res)=>{
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
-        user_service.getUserByUsernameAndToken(user,user_model.VERIFY_TOKEN,token)
+        user_provider.getUserByUsernameAndToken(user,user_model.VERIFY_TOKEN,token)
             .then((_user)=>{
                 if(Date.now()>_user.auth_token.expire_at)
                     res.render('error/500.html',{err:'Token expired'});
@@ -90,7 +91,7 @@ exports.forgot_page=(req,res)=>{
     res.render('auth/forgot.html');
 }
 exports.forgot=(req,res)=>{
-    user_service.getUserByEmail(req.body.email)
+    user_provider.getUserByEmail(req.body.email)
         .then((user)=>{
             if(user.account_expired){
                 req.flash('error','Account has expired')
@@ -132,7 +133,7 @@ exports.forgot=(req,res)=>{
 exports.reset_page=(req,res)=>{
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
-        user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
+        user_provider.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
             .then((_user)=>{
                 if(Date.now()>_user.auth_token.expire_at)
                     res.render('error/500.html',{err:'Token expired'});
@@ -149,7 +150,7 @@ exports.reset_page=(req,res)=>{
 exports.reset=(req,res)=>{
     if(req.query.token){
         var {user,token} = util.decodeAuthToken(req.query.token);
-        user_service.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
+        user_provider.getUserByUsernameAndToken(user,user_model.PASSWORD_RESET_TOKEN,token)
             .then((_user)=>{
                 if(Date.now()>_user.auth_token.expire_at)
                     res.render('error/500.html',{err:'Token expired'});

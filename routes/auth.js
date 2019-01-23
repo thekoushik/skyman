@@ -1,45 +1,42 @@
-var authController=require('../controllers').auth;
-var middleware=require('../middlewares');
-
 module.exports=[
     {
         path:"/login",
-        controller: authController.loginPage,
-        middleware: [ middleware.csrfProtection ]
+        controller: "auth.loginPage",
+        middleware: [ "index.csrfProtection" ]
     },{
         path:"/login",
         method:"post",
-        controller: authController.login,
-        middleware: [ middleware.csrfProtection ]
+        controller: "auth.login",
+        middleware: [ "index.csrfProtection" ]
     },{
         path: "/join",
-        controller: authController.registerPage
+        controller: "auth.registerPage"
     },{
         path: "/logout",
-        controller: authController.logout
+        controller: "auth.logout"
     },{
         path: "/resend_verify",
-        controller: authController.resend_verify_page
+        controller: "auth.resend_verify_page"
     },{
         path: "/resend_verify",
         method:'post',
-        controller: authController.resend_verify
+        controller: "auth.resend_verify"
     },{
         path: "/verify",
-        controller: authController.verify
+        controller: "auth.verify"
     },{
         path: "/forgot",
-        controller: authController.forgot_page
+        controller: "auth.forgot_page"
     },{
         path: "/forgot",
         method:"post",
-        controller: authController.forgot
+        controller: "auth.forgot"
     },{
         path: "/reset",
-        controller: authController.reset_page
+        controller: "auth.reset_page"
     },{
         path: "/reset",
         method:"post",
-        controller: authController.reset
+        controller: "auth.reset"
     }
 ];

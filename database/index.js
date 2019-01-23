@@ -1,4 +1,4 @@
 exports.connect=require('./connector').connect;
 exports.models=require('./models');
-exports.services=require('./services');
+exports.providers=require('./providers');
 exports.seeder=require('./seeders');

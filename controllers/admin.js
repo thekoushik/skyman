@@ -1,7 +1,7 @@
-var {user_service}=require('../database').services;
+var {user_provider}=require('../database').providers;
 
 exports.dashboard=(req,res)=>{
-    user_service.getAllUsers().then((list)=>{
+    user_provider.getAllUsers().then((list)=>{
         res.render('admin/dashboard.html',{users:list});
     })
     .catch((e)=>{

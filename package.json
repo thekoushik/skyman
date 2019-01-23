@@ -1,7 +1,7 @@
 {
   "name": "skyman-framework",
   "version": "0.0.1",
-  "description": "Web framework for nodejs",
+  "description": "Open Web Framework for nodejs",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index",

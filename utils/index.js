@@ -1,3 +1,5 @@
+var fs=require('fs');
+var path=require('path');
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 exports.view=require('./view');
@@ -24,4 +26,15 @@ exports.decodeAuthToken=(token)=>{
 exports.snakeToCamel=(s)=>{
     var ss=s.replace(/(\_\w)/g, function(m){return m[1].toUpperCase();});
     return ss[0].toUpperCase()+ss.substr(1);
+}
+exports.scanFiles=(folder)=>{
+    var scripts=[];
+    fs.readdirSync(folder).forEach((file)=>{
+        var f= path.parse(file);
+        if(f.ext==".js"){
+            //if(f.name!="index")
+            scripts.push(f.name);
+        }
+    });
+    return scripts;
 }
