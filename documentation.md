@@ -7,10 +7,11 @@ Simple but expandable.
 -  [Middlewares](#middlewares)
 -  [Database](#database)
 	-  [Models](#models)
-	-  [Services](#services)
+	-  [Providers](#providers)
 	-  [Seeders](#seeders)
 -  [Routes](#routes)
 -  [Views](#views)
+-  [Services](#services)
 -  [Generators](#generators)
 -  [Helpers](#helpers)
 
