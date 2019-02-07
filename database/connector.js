@@ -37,6 +37,13 @@ exports.connect=(noseed)=>{
         con.then(()=>{
             require('./seeders').seed('admin');//disable this line if you don't want default admin seeding
         })
+        .catch((e)=>{
+            if(e.name=="MongoError"){
+                console.log("Cannot connect to database. Please check your database connection.");
+                process.exit(1);
+            }else
+                console.log(e)
+        })
     else
         return con;
 }

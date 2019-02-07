@@ -20,6 +20,7 @@ var sessionConfig={
     saveUninitialized: true
 };
 
+//make sure redis is running before starting your application
 if(config.redis){
     var RedisStore = require('connect-redis')(expressSession);
     sessionConfig.store=new RedisStore(config.redis);
@@ -46,19 +47,7 @@ app.use(function(req,res,next){
     next();
 });
 
-/*
-Usage:
-    throw make404()
-*/
-global.make404=(msg)=>{
-    var err=new Error(msg || "Page not found");
-    err.code = '404';
-    return err;
-}
-global.goBackWithData=(req,res)=>{
-    req.flash('_old_',req.body);
-    return res.redirect('back');
-}
+require('./helper');
 
 //connect to database
 require('../database/connector').connect();

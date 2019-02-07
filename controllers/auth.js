@@ -1,7 +1,7 @@
 var {kernel}=require('../system');
 var util=require('../utils');
 var {user_provider}=require('../database').providers;
-var {mail_service}=require('../services');
+var {email_service}=require('../services');
 var user_model=require('../database').models.user;
 
 exports.loginPage=(req,res)=>{
@@ -46,7 +46,7 @@ exports.resend_verify=(req,res)=>{
         .then((user)=>{
             if(!user.enabled){
                 const token=util.encodeAuthToken(user.username,user.auth_token.token);
-                mail_service.sendEmailConfirm(user.email,global.config.url+'/verify?token='+token)
+                email_service.sendEmailConfirm(user.email,global.config.url+'/verify?token='+token)
                 .then((response)=>{
                     console.info(response);
                 })
@@ -114,7 +114,7 @@ exports.forgot=(req,res)=>{
         })
         .then((newuser)=>{
             const token=util.encodeAuthToken(newuser.username,newuser.auth_token.token);
-            mail_service.sendEmailForgot(newuser.email,global.config.url+'/reset?token='+token)
+            email_service.sendEmailForgot(newuser.email,global.config.url+'/reset?token='+token)
             .then((response)=>{
                 console.info(response);
             })

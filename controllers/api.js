@@ -1,5 +1,5 @@
 var {user_provider}=require('../database').providers;
-var {mail_service}=require('../services');
+var {email_service}=require('../services');
 var util=require('../utils');
 
 exports.userList=(req, res)=>{
@@ -27,7 +27,7 @@ exports.userCreate=(req,res)=>{
   const token=util.encodeAuthToken(userdata.username,verifyToken.token);
   user_provider.userCreate(userdata)
     .then((user)=>{
-      mail_service.sendEmailConfirm(user.email,global.config.url+'/verify?token='+token)
+      email_service.sendEmailConfirm(user.email,global.config.url+'/verify?token='+token)
       .then((response)=>{
           console.info(response);
       })
