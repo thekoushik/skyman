@@ -1,15 +1,20 @@
 {
-  "name": "skyman-framework",
-  "version": "0.0.1",
+  "name": "skyman",
+  "version": "0.1.0",
   "description": "Open Web Framework for nodejs",
   "main": "index.js",
-  "scripts": {
-    "start": "nodemon index",
-    "gen": "node system/generator.js",
-    "test": "node_modules/.bin/mocha",
-    "seed": "node system/seed.js"
+  "bin": {
+    "skyman": "./dist/cli/index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "framework",
+    "express",
+    "open",
+    "web"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
   "author": "Koushik Seal",
   "repository": {
     "type": "git",
@@ -17,33 +22,25 @@
   },
   "license": "MIT",
   "dependencies": {
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "connect-flash": "^0.1.1",
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
-    "csurf": "^1.9.0",
     "express": "^4.16.4",
     "express-session": "^1.14.2",
-    "gateman": "^0.2.1",
     "helmet": "^3.15.0",
-    "http-errors": "^1.7.1",
-    "mongoose": "^4.13.17",
-    "nodemailer": "^4.7.0",
+    "mongoose": "^5.4.13",
     "nunjucks": "^3.1.4",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "sequelize": "^4.42.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "faker": "^4.1.0",
-    "mocha": "^5.2.0"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "/static/*",
-      "/test/*"
-    ]
+    "mocha": "^5.2.0",
+    "typescript": "^3.3.4000"
   }
 }
