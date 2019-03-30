@@ -1,39 +1,34 @@
-import DBConnector from './DBConnector';
-import InMemoryDBConnector from './InMemoryDBConnector';
-import NoSQLConnector from './NoSQLConnector';
-import SQLConnector from './SQLConnector';
+import Feather from "../Feather";
+import { SQLDatabase } from "./SQLDatabase";
+import { NoSQLDatabase } from "./NoSQLDatabase";
+declare var global:any;
 
-/**
- * 
- */
-export class DB{
-    private static singleton:DB;
-    private connector:DBConnector;
-    private settings:any;
-    constructor(settings?:any){
-        if(DB.singleton) throw new Error("Database is already initialized, use the static methods.");
-        DB.singleton=this;
-        //this.connector=new InMemoryDBConnector();
-        this.settings=settings;
-        if(this.settings.nosql){
-            this.connector=new NoSQLConnector();
-        }else{
-            this.connector=new SQLConnector();
+export class Database implements Feather{
+    attach(settings:any,options:any,root:string,app:any){
+        if(options.db){
+            if(settings.db.type=='sql' || settings.db.type=='both'){
+                let sql=new SQLDatabase(settings.db);
+                sql.connect(global.config.db.sql)
+                .then(()=>{
+                    //console.log("Database Connected..");
+                })
+                .catch((e:any)=>{
+                    console.log(e)
+                });
+            }
+            if(settings.db.type=='nosql' || settings.db.type=='both'){
+                let nosql=new NoSQLDatabase(settings.db);
+                nosql.connect(global.config.db.nosql)
+                .then(()=>{
+                    //console.log("Database Connected..");
+                })
+                .catch((e:any)=>{
+                    if(e.name=="MongoError")
+                        console.log("Cannot connect to database. Please check your database connection.");
+                    else
+                        console.log(e)
+                });
+            }
         }
-    }
-    connect(config:any):Promise<any>{
-        return this.connector.connect(config);
-    }
-    public static getInstance():DB{
-        return DB.singleton;
-    }
-    static createModel(name:string,definition:any,option:any={}):any{
-        return DB.singleton.connector.createModel(name,definition,option);
-    }
-    static type(name:string,...args:any):any{
-        return DB.singleton.connector.type(name,args);
-    }
-    static connection(){
-        return DB.singleton.connector.getConnection();
     }
 }

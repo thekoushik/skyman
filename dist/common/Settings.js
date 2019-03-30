@@ -33,6 +33,6 @@ exports.DefaultSettings = {
     },
     db: {
         directory: "database",
-        nosql: true
+        type: 'sql' //sql , nosql , both
     }
 };

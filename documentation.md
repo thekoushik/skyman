@@ -1,143 +1,71 @@
 # SkyMan
 Simple but expandable.
 
-# Table of contents
--  [Overview](#overview)
--  [Controllers](#controllers)
--  [Middlewares](#middlewares)
--  [Database](#database)
-	-  [Models](#models)
-	-  [Providers](#providers)
-	-  [Seeders](#seeders)
--  [Routes](#routes)
--  [Views](#views)
--  [Services](#services)
--  [Generators](#generators)
--  [Helpers](#helpers)
+## API
 
-# Overview
-SkyMan is the simplest nodejs open framework that runs on top of expressjs. Each and every module can be customized or overridable at any extent. You can even replace its modules with third-party libraries or your own code.
+### Settings
 
-# Controllers
-The **controllers** folder contains all the controllers and are exported from **controllers/index.js**. A controller endpoint is an exported express **handler function**.
-#### Example
-```javascript
-exports.endpointA=(req,res,next)=>{
-	res.send("Endpoint A");
-}
-```
+- statics
+	- `/static` = "static"
+- bodyparser
+	- `json`
+		- `limit` = "10mb"
+	- `urlencoded`
+		- `extended` = `true`
+		- `limit` = "10mb"
+		- `parameterLimit` = 1000000
+- cookieparser
+- helmet
+- session
+	- `secret` = "skymansecret"
+	- `resave` = `true`
+	- `saveUninitialized` = `true`
+- redis = `false`
+- flash
+- auth
+	- `strategy` = "local",
+	- `fields` 
+		- `usernameField` = "username"
+		- `passwordField` = "password"
+	- `provider` = `default`
+- view
+	- `autoescape` = `true`
+- db
+	- `directory` = "database"
+	- `type` = "sql" ( sql |  nosql | both )
 
-# Middlewares
-The **middlewares** folder contains route middlewares similar to controllers.
+### Option
+- `session` = true
+- `flash` = true
+- `auth` = false
+- `view` = true
+- `db` = false
+- `port` = `process.env.PORT` or `8000`
 
-# Database
-The **database/index.js** exports all the modules that relates to database operations. Throughout the application. The **database/connector.js** exports the database connection wrapper function ``` connect() ```.
+### class Skyman
 
-#### Exports:
--  ``` connect(noseed) ``` - Function
-	Initializes database connection. If ``` noseed ``` is true, it skips the admin seeding and returns a promise.
--  ``` models ``` - Object
-	All the models, exported from **database/models/index.js**
--  ``` services ``` - Object
-	All the database services, exported from **database/services/index.js**
--  ``` seeder ``` - Object
-	Database seeding module, exported from **database/seeders/index.js**
+#### constructor([options])
 
-## Models
-[MongooseJS](https://mongoosejs.com) schemas are defined in the **database/models** folder and are exported from **database/models/index.js**.
+#### load([path to application])
 
-## Providers
-The **database/providers** folder contains functions to interact the database via the exported models from **database/models** folder.
+#### fly(callbackFn)
 
-## Seeders
-Seeder is a javascript file containing a default export  that creates dummy data into the database. All seeders in **database/seeders** directory must be enlisted in the ``` allseeders ``` object in **database/seeders/index.js** so they can be run from npm scripts
+### class SQLDatabase
 
-#### View seeders
-	npm run seed
+#### createModel(name, definition[, option])
 
-#### Run seeds
-	npm run seed seeder_name1 seeder_name2 ...
-where _seeder_name1_ is a seeder from "view seeders"
+#### type(name[, arg1][, arg2] ...)
 
-#### Example
-```javascript
-var { article }=require('../models');
-exports.getUserArticles=(user_id)=>{
-    return article.find({user:user_id}).sort('-created_at').exec();
-}
-```
+### class NoSQLDatabase
 
-# Routes
-The **routes** folder contains all the route endpoints of the application. The main route is exported as default from **index.js**. You may create module based files of routes and require them in **index.js** with a path.
+#### createModel(name, definition[, option])
 
-#### Single Route
-```javascript
-{
-	path: "route_path",
-	method: "method_name",
-	middleware: ["middleaware.function_name1", "middleaware.function_name2"],
-	controller: "controller.function_name"
-}
-```
+#### type(name)
 
-#### Example
-##### routes/my_routes.js
-```javascript
-module.exports=[
-	{
-		path: "/",
-		controller: "my_controller.my_function"
-	}
-]
-```
-##### routes/index.js
-Add an array item in **routerJson** array as following:
-```javascript
- . . .
-const routerJson=[
- . . .
- } , { // add your route as an array item 
-	path: "/my_route",
-	children: require('./my_route')
- } , {
- . . .
-```
-> **Warning**: Beware of circular routes.
+### class View
 
-# Views
-The **view** folder contains all the html files that are being rendered from controllers. [Nunjucks](https://mozilla.github.io/nunjucks) templating engine is used to render the html files. The reason for using Nunjucks is the **template inheritance** feature.
+#### render(view_path[, context])
 
-# Services
-The **services** folder contains application services like Email, Chat etc.
+### class Auth
 
-# Generators
-
-##### View list of generators
-	npm run gen
-
-- ##### Generate Model
-   	npm run gen model model_name
-   
-   will create **model_name.js** in **database/models** directory with name **ModelName**
-
-
-# Helpers
--  ``` config ``` - Object
-	Application configuration object from **config.js**
--  ``` make404() ``` - Function
-	Returns a 404 error to be thrown
-	Example:
-	```javascript
-	throw make404()
-	```
--  ``` goBackWithData(request_obj, response_obj) ``` - Function
-	Redirects back to where the request has come from with request body available through ``` old() ``` function
-
-### View helpers
--  ``` old(field_name, default_value) ``` - Function
-	Returns last form data
-	> Note: This function requires ``` goBackWithData() ``` function in controller
--  ``` request ``` - Object
-	This is the current request object
--  ``` view ``` - Object
-	This object provides access to all variables/functions exported from **utils/view.js**
+#### authenticate(req, res, next, cb)

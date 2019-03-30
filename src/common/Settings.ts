@@ -46,6 +46,6 @@ export const DefaultSettings:Settings={
     },
     db:{
         directory:"database",
-        nosql:true
+        type:'sql'//sql , nosql , both
     }
 }

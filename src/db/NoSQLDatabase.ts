@@ -1,9 +1,13 @@
-import DBConnector from './DBConnector';
-import BasicDBConnector from './BasicDBConnector';
-
-export default class NoSQLConnector extends BasicDBConnector implements DBConnector{
-    constructor(){
-        super();
+export class NoSQLDatabase{
+    private static singleton:NoSQLDatabase;
+    private static driver:any;
+    protected options:any;
+    private static schemaBuilder:any;
+    private settings:any;
+    constructor(settings?:any){
+        if(NoSQLDatabase.singleton) throw new Error("Database is already initialized, use the static methods.");
+        NoSQLDatabase.singleton=this;
+        this.settings=settings;
         var mongoose=require('mongoose');
         mongoose.set('useCreateIndex', true);
         //mongoose.Promise=global.Promise;
@@ -40,18 +44,22 @@ export default class NoSQLConnector extends BasicDBConnector implements DBConnec
             schema.post('findOneAndUpdate', postHook);
         })
         this.options={ useNewUrlParser: true };
-        this.driver=mongoose;
+        NoSQLDatabase.driver=mongoose;
+        NoSQLDatabase.schemaBuilder=mongoose.Schema;
     }
     connect(config:any):Promise<any>{
-        return this.driver.connect(config.uri,this.options)
+        return NoSQLDatabase.driver.connect(config.uri,this.options)
     }
-    createModel(name:string,definition:any,option:any={}):any{
-        return this.driver.model(name,new this.driver.Schema(definition,option));
+    public static getInstance():NoSQLDatabase{
+        return NoSQLDatabase.singleton;
     }
-    type(name:string,args?:any[]):any{
-        return this.driver.Schema.Types[name];
+    public static createModel(name:string,definition:any,option:any={}):any{
+        return NoSQLDatabase.driver.model(name,new NoSQLDatabase.schemaBuilder(definition,option));
     }
-    getConnection():any{
-        return this.driver;
+    public static type(name:string):any{
+        return NoSQLDatabase.schemaBuilder.Types[name];
+    }
+    public static connection(){
+        return NoSQLDatabase.driver;
     }
 }

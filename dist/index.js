@@ -19,7 +19,6 @@ var Settings_1 = require("./common/Settings");
 var Options_1 = require("./common/Options");
 var bootstrap_1 = __importDefault(require("./bootstrap"));
 var router_1 = require("./router");
-var db_1 = require("./db");
 var utils_1 = require("./utils");
 /**
  *
@@ -49,19 +48,6 @@ var Skyman = /** @class */ (function () {
         for (var key in this.settings.statics)
             this.app.use(key, express.static(this.settings.statics[key]));
         bootstrap_1.default({ settings: this.settings, options: this.options, root: this.root, app: this.app });
-        if (this.options.db) {
-            db_1.DB.getInstance()
-                .connect(global.config.db)
-                .then(function () {
-                //console.log("Database Connected..");
-            })
-                .catch(function (e) {
-                if (e.name == "MongoError")
-                    console.log("Cannot connect to database. Please check your database connection.");
-                else
-                    console.log(e);
-            });
-        }
         this.loaded = true;
     };
     Skyman.prototype.fly = function (cb) {

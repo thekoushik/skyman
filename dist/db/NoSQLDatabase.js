@@ -1,26 +1,11 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var BasicDBConnector_1 = __importDefault(require("./BasicDBConnector"));
-var NoSQLConnector = /** @class */ (function (_super) {
-    __extends(NoSQLConnector, _super);
-    function NoSQLConnector() {
-        var _this = _super.call(this) || this;
+var NoSQLDatabase = /** @class */ (function () {
+    function NoSQLDatabase(settings) {
+        if (NoSQLDatabase.singleton)
+            throw new Error("Database is already initialized, use the static methods.");
+        NoSQLDatabase.singleton = this;
+        this.settings = settings;
         var mongoose = require('mongoose');
         mongoose.set('useCreateIndex', true);
         //mongoose.Promise=global.Promise;
@@ -57,23 +42,26 @@ var NoSQLConnector = /** @class */ (function (_super) {
             schema.post('update', postHook);
             schema.post('findOneAndUpdate', postHook);
         });
-        _this.options = { useNewUrlParser: true };
-        _this.driver = mongoose;
-        return _this;
+        this.options = { useNewUrlParser: true };
+        NoSQLDatabase.driver = mongoose;
+        NoSQLDatabase.schemaBuilder = mongoose.Schema;
     }
-    NoSQLConnector.prototype.connect = function (config) {
-        return this.driver.connect(config.uri, this.options);
+    NoSQLDatabase.prototype.connect = function (config) {
+        return NoSQLDatabase.driver.connect(config.uri, this.options);
     };
-    NoSQLConnector.prototype.createModel = function (name, definition, option) {
+    NoSQLDatabase.getInstance = function () {
+        return NoSQLDatabase.singleton;
+    };
+    NoSQLDatabase.createModel = function (name, definition, option) {
         if (option === void 0) { option = {}; }
-        return this.driver.model(name, new this.driver.Schema(definition, option));
+        return NoSQLDatabase.driver.model(name, new NoSQLDatabase.schemaBuilder(definition, option));
     };
-    NoSQLConnector.prototype.type = function (name, args) {
-        return this.driver.Schema.Types[name];
+    NoSQLDatabase.type = function (name) {
+        return NoSQLDatabase.schemaBuilder.Types[name];
     };
-    NoSQLConnector.prototype.getConnection = function () {
-        return this.driver;
+    NoSQLDatabase.connection = function () {
+        return NoSQLDatabase.driver;
     };
-    return NoSQLConnector;
-}(BasicDBConnector_1.default));
-exports.default = NoSQLConnector;
+    return NoSQLDatabase;
+}());
+exports.NoSQLDatabase = NoSQLDatabase;

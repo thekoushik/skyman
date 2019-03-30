@@ -1,47 +1,37 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var NoSQLConnector_1 = __importDefault(require("./NoSQLConnector"));
-var SQLConnector_1 = __importDefault(require("./SQLConnector"));
-/**
- *
- */
-var DB = /** @class */ (function () {
-    function DB(settings) {
-        if (DB.singleton)
-            throw new Error("Database is already initialized, use the static methods.");
-        DB.singleton = this;
-        //this.connector=new InMemoryDBConnector();
-        this.settings = settings;
-        if (this.settings.nosql) {
-            this.connector = new NoSQLConnector_1.default();
-        }
-        else {
-            this.connector = new SQLConnector_1.default();
-        }
+var SQLDatabase_1 = require("./SQLDatabase");
+var NoSQLDatabase_1 = require("./NoSQLDatabase");
+var Database = /** @class */ (function () {
+    function Database() {
     }
-    DB.prototype.connect = function (config) {
-        return this.connector.connect(config);
-    };
-    DB.getInstance = function () {
-        return DB.singleton;
-    };
-    DB.createModel = function (name, definition, option) {
-        if (option === void 0) { option = {}; }
-        return DB.singleton.connector.createModel(name, definition, option);
-    };
-    DB.type = function (name) {
-        var args = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            args[_i - 1] = arguments[_i];
+    Database.prototype.attach = function (settings, options, root, app) {
+        if (options.db) {
+            if (settings.db.type == 'sql' || settings.db.type == 'both') {
+                var sql = new SQLDatabase_1.SQLDatabase(settings.db);
+                sql.connect(global.config.db.sql)
+                    .then(function () {
+                    //console.log("Database Connected..");
+                })
+                    .catch(function (e) {
+                    console.log(e);
+                });
+            }
+            if (settings.db.type == 'nosql' || settings.db.type == 'both') {
+                var nosql = new NoSQLDatabase_1.NoSQLDatabase(settings.db);
+                nosql.connect(global.config.db.nosql)
+                    .then(function () {
+                    //console.log("Database Connected..");
+                })
+                    .catch(function (e) {
+                    if (e.name == "MongoError")
+                        console.log("Cannot connect to database. Please check your database connection.");
+                    else
+                        console.log(e);
+                });
+            }
         }
-        return DB.singleton.connector.type(name, args);
     };
-    DB.connection = function () {
-        return DB.singleton.connector.getConnection();
-    };
-    return DB;
+    return Database;
 }());
-exports.DB = DB;
+exports.Database = Database;
