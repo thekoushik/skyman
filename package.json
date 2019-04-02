@@ -13,7 +13,8 @@
     "web"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "rimraf dist && tsc",
+    "prepare": "npm run build"
   },
   "author": "Koushik Seal",
   "repository": {
@@ -41,6 +42,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^5.2.0",
+    "rimraf": "^2.6.3",
     "typescript": "^3.3.4000"
   }
 }
