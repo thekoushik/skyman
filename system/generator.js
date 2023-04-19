@@ -11,9 +11,12 @@ var Schema       = mongoose.Schema;
 var ${tableName}Schema   = new Schema({
     name: {type: String, required: true},
 },{
-    timestamps: { createdAt: 'created_at',updatedAt:'updated_at' }
+    timestamps: { createdAt: 'created_at',updatedAt:'updated_at' },
+    toJSON: { virtuals: true }
 });
-module.exports = mongoose.model('${tableName}', ${tableName}Schema);`;
+module.exports = {
+    model: mongoose.model('${tableName}', ${tableName}Schema)
+};`;
     fs.writeFileSync(file,start);
     return true;
 }
